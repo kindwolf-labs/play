@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="theme-color" content="#0b1020" />
+<title>Play — 三款原创小游戏</title>
+<meta name="description" content="三款原创 HTML5 小游戏试玩：梦幻十一人、Bloom Rings、Perfect Season。" />
+<style>
+  :root { --bg:#0b1020; --card:#151b31; --ink:#eef2ff; --muted:#9aa3c7; --line:#2a3358; --gold:#e7c56a; --teal:#6ee7c5; --rose:#ff9ec8; --sky:#8bb7ff; }
+  * { box-sizing: border-box; }
+  html, body { margin:0; background:radial-gradient(1200px 600px at 50% -10%, #1a2452 0%, var(--bg) 55%); color:var(--ink); font-family: ui-sans-serif, system-ui, "PingFang SC", "Noto Sans SC", sans-serif; }
+  main { width:min(980px, calc(100% - 32px)); margin:0 auto; padding:48px 0 80px; }
+  header { text-align:center; margin-bottom:36px; }
+  .mark { width:56px; height:56px; margin:0 auto 16px; border-radius:16px; background:conic-gradient(from 220deg, var(--gold), var(--teal), var(--sky), var(--rose), var(--gold)); display:grid; place-items:center; box-shadow:0 10px 30px #0006; }
+  .mark span { width:42px; height:42px; border-radius:12px; background:#0b1020; display:grid; place-items:center; font-weight:800; letter-spacing:.04em; }
+  h1 { font-size:clamp(28px, 5vw, 42px); margin:0 0 8px; letter-spacing:.02em; }
+  .sub { color:var(--muted); margin:0; font-size:16px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(250px, 1fr)); gap:18px; }
+  a.card { display:block; text-decoration:none; color:inherit; background:linear-gradient(180deg, #1b2342, var(--card)); border:1px solid var(--line); border-radius:20px; padding:22px 22px 24px; box-shadow:0 12px 30px #0004; transition:transform .15s ease, border-color .15s ease; min-height:200px; }
+  a.card:hover { transform:translateY(-3px); border-color:#4a5a96; }
+  .tag { display:inline-block; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#0b1020; background:var(--chip, var(--gold)); border-radius:999px; padding:4px 9px; font-weight:700; }
+  h2 { margin:14px 0 8px; font-size:22px; line-height:1.25; }
+  p { margin:0; color:var(--muted); font-size:14px; line-height:1.55; }
+  .go { margin-top:18px; color:var(--gold); font-weight:700; font-size:14px; }
+  footer { margin-top:40px; text-align:center; color:#6d7699; font-size:12px; }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="mark" aria-hidden="true"><span>PLAY</span></div>
+    <h1>原创小游戏试玩</h1>
+    <p class="sub">Build-output only · 免费在线游玩 · 源码仓库保持私有</p>
+  </header>
+  <section class="grid">
+    <a class="card" href="football-draft/">
+      <span class="tag" style="--chip:var(--gold)">Football</span>
+      <h2>梦幻十一人<br>Dream Draft XI</h2>
+      <p>转盘选秀、组建阵容，征战虚构的极光联赛。</p>
+      <div class="go">开始游玩 →</div>
+    </a>
+    <a class="card" href="bloom-rings/">
+      <span class="tag" style="--chip:var(--rose)">Puzzle</span>
+      <h2>Bloom Rings</h2>
+      <p>旋转花环、理顺色彩，三十关原创解谜。</p>
+      <div class="go">开始游玩 →</div>
+    </a>
+    <a class="card" href="gridiron-draft/">
+      <span class="tag" style="--chip:var(--sky)">Gridiron</span>
+      <h2>Perfect Season<br>Gridiron Draft</h2>
+      <p>选秀组队，冲击一个不败赛季。原创球员与联盟。</p>
+      <div class="go">开始游玩 →</div>
+    </a>
+  </section>
+  <footer>kindwolf-labs / play · 构建自已提交版本，不含未提交打磨改动</footer>
+</main>
+</body>
+</html>

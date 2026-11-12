@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+<meta name="theme-color" content="#2a1650" />
+<title>Bloom Rings</title>
+<link rel="icon" type="image/png" href="./icons/icon-192.png" />
+<link rel="apple-touch-icon" href="./icons/icon-180.png" />
+  <script type="module" crossorigin src="/play/bloom-rings/assets/index-wV6OHjlv.js"></script>
+  <link rel="stylesheet" crossorigin href="/play/bloom-rings/assets/index-Bx93MRhJ.css">
+</head>
+<body>
+<div id="app">
+  <div class="bg"><div class="bokeh"></div></div>
+  <section id="title" class="screen">
+    <canvas id="titleCanvas"></canvas>
+    <div class="logo"><div class="logo-main">Bloom<span>Rings</span></div><div class="logo-sub" data-t="subtitle"></div></div>
+    <button class="btn big pulse" id="btnPlay" data-t="play"></button>
+    <div class="title-foot"><button class="iconbtn" id="btnLangTitle">EN / 中</button></div>
+  </section>
+  <section id="map" class="screen hidden">
+    <header class="topbar"><div class="pill coins"><i class="coin"></i><b id="coinMap">0</b></div><div class="pill stars"><i class="staricon">★</i><b id="starMap">0</b></div><button class="iconbtn gear" id="btnSettings" aria-label="settings"></button></header>
+    <div class="map-scroll" id="mapScroll"><div class="map-inner" id="mapInner"></div></div>
+  </section>
+  <section id="play" class="screen hidden">
+    <header class="hud">
+      <button class="iconbtn back" id="btnBack" aria-label="map"></button>
+      <div class="hud-level" id="hudLevel">Level 1</div>
+      <div class="moves" id="movesBox"><div class="moves-label" data-t="moves"></div><div class="moves-num" id="movesNum">0</div></div>
+    </header>
+    <div class="tip hidden" id="tip"></div>
+    <canvas id="board"></canvas>
+    <footer class="boosters">
+      <button class="booster" id="btnUndo"><span class="bicon undo"></span><span class="blabel" data-t="undo"></span><em class="badge" id="undoN">3</em></button>
+      <button class="booster" id="btnRestart"><span class="bicon restart"></span><span class="blabel" data-t="restart"></span></button>
+      <button class="booster" id="btnHint"><span class="bicon hint"></span><span class="blabel" data-t="hint"></span><em class="badge" id="hintN">2</em></button>
+    </footer>
+  </section>
+  <div id="modal" class="modal hidden"><div class="card" id="card"></div></div>
+  <div id="toast" class="toast hidden"></div>
+</div>
+</body>
+</html>
