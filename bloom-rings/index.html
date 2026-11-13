@@ -6,9 +6,9 @@
 <meta name="theme-color" content="#2a1650" />
 <title>Bloom Rings</title>
 <link rel="icon" type="image/png" href="./icons/icon-192.png" />
-<link rel="apple-touch-icon" href="./icons/icon-180.png" />
-  <script type="module" crossorigin src="/play/bloom-rings/assets/index-D_BqBET5.js"></script>
-  <link rel="stylesheet" crossorigin href="/play/bloom-rings/assets/index-Bx93MRhJ.css">
+<link rel="apple-touch-icon" href="./icons/icon-180.png" />
+  <script type="module" crossorigin src="./assets/index-CXTsgdMA.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-9Kiuc69z.css">
 </head>
 <body>
 <div id="app">
@@ -21,6 +21,7 @@
   </section>
   <section id="map" class="screen hidden">
     <header class="topbar"><div class="pill coins"><i class="coin"></i><b id="coinMap">0</b></div><div class="pill stars"><i class="staricon">★</i><b id="starMap">0</b></div><button class="iconbtn gear" id="btnSettings" aria-label="settings"></button></header>
+    <div class="campaign-nav"><label><span data-t="chapters"></span><select id="chapterSelect" aria-label="Chapter / 章节"></select></label><span id="campaignProgress"></span><button class="iconbtn" id="btnHelp" data-t="howToPlay"></button></div>
     <div class="map-scroll" id="mapScroll"><div class="map-inner" id="mapInner"></div></div>
   </section>
   <section id="play" class="screen hidden">
@@ -39,6 +40,6 @@
   </section>
   <div id="modal" class="modal hidden"><div class="card" id="card"></div></div>
   <div id="toast" class="toast hidden"></div>
-</div>
+</div>
 </body>
 </html>

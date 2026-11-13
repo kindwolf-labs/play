@@ -1,15 +1,20 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#082c35"><title>Arrow Harbor · 箭头港湾</title><link rel="stylesheet" href="style.css"></head>
 <body><main>
-<header><a class="brand" href="../" aria-label="Prototype collection">KINDWOLF / PLAY LAB</a><button id="language" class="language" aria-label="Switch language">中文</button></header>
+<header><a class="brand" href="https://kindwolf-labs.github.io/play/lab/" aria-label="Game collection">KINDWOLF / PLAY</a><div><button id="sound" class="language" aria-label="Sound">♪ Off</button> <button id="language" class="language" aria-label="Switch language">中文</button></div></header>
 <section class="intro"><div class="eyebrow" id="eyebrow">A LITTLE HARBOR. A CLEAR MIND.</div><h1 id="title">Arrow Harbor<span>↗</span></h1><p id="subtitle">Find a clear route. Let every little boat sail home.</p></section>
-<section class="game"><div class="topline"><div><span class="label" id="levelLabel">HARBOR</span><strong id="level">01 <small>/ 12</small></strong></div><div class="remaining"><span class="label" id="remainingLabel">BOATS LEFT</span><strong id="remaining">6</strong></div></div>
+<section class="game"><div class="topline"><div><span class="label" id="levelLabel">HARBOR</span><strong id="level">01 <small>/ 150</small></strong></div><div class="remaining"><span class="label" id="remainingLabel">BOATS LEFT</span><strong id="remaining">6</strong></div></div>
 <div class="harbor-wrap"><span class="compass" aria-hidden="true">N ↑</span><div id="board" class="board" aria-label="Harbor puzzle"></div></div>
 <div id="message" class="message" role="status" aria-live="polite"></div>
 <div class="tools"><button id="undo">↶ <span>Undo</span></button><button id="hint">✦ <span>Hint</span></button><button id="restart">↻ <span>Restart</span></button></div>
 <section id="victory" class="victory" hidden><div class="victory-icon">⚑</div><h2 id="winTitle">A clear harbor!</h2><p id="winCopy">Every boat found its way home.</p><button id="next" class="primary">Next harbor →</button></section>
 </section>
+<div class="runstats"><span id="moves"></span><span id="best"></span><span id="clock">0:00</span></div>
+<div class="chapterbar"><button id="previousChapter" aria-label="Previous chapter">←</button><span id="chapterName"></span><button id="nextChapter" aria-label="Next chapter">→</button></div>
 <nav class="levels" id="levels" aria-label="Choose harbor"></nav>
+<div id="campaignProgress" class="campaign-progress"></div>
+<details class="guide" id="guide"><summary id="guideTitle">How to play & stars</summary><p id="guideCopy"></p></details>
 <aside class="instructions"><span class="instruction-mark">↗</span><p id="instructions">Tap a boat to send it along its arrow. Boats only sail when the whole route ahead is clear. No timer. Take your time.</p></aside>
-<footer id="footer">12 handcrafted-feeling harbors · Free prototype · No ads</footer>
+<footer id="footer">150 original harbors · Free to play · No ads</footer>
+<nav aria-label="Privacy and feedback / 隐私与反馈" style="display:flex;flex-wrap:wrap;justify-content:center;gap:16px;margin:20px 0 6px;font-size:12px;line-height:1.8"><a href="https://kindwolf-labs.github.io/play/lab/privacy.html" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;text-underline-offset:3px">Privacy / 隐私</a><a href="https://github.com/kindwolf-labs/play/issues/new" target="_blank" rel="noopener noreferrer" style="color:inherit;text-decoration:underline;text-underline-offset:3px">Feedback / 反馈</a></nav>
 </main><script type="module" src="game.js"></script></body></html>
