@@ -1,0 +1,13 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#1e3c39"><title>叠片远行 · Tile Expedition</title><link rel="stylesheet" href="style.css"></head><body><main>
+<header><a href="https://kindwolf-labs.github.io/play/lab/">← 游戏合集</a><button id="map">远行地图</button></header>
+<section class="brand"><span class="eyebrow">TILE EXPEDITION</span><h1>叠片远行<span aria-hidden="true">✦</span></h1><p>在层叠的风景里，找回相同的三枚印记。</p></section>
+<section class="journey"><div><span id="chapter">苔原启程</span><h2 id="level">第 1 / 150 站</h2></div><div class="progress"><strong id="remaining">18</strong><span>枚待收集</span></div></section>
+<p class="instruction" id="notice" role="status">点击最上层的牌，三枚相同印记会一起消除。</p>
+<section class="terrain" aria-label="层叠牌面"><div id="board"></div><div class="terrain-label">探索 · 收集 · 轻装前行</div></section>
+<section class="tray-wrap"><div class="tray-heading"><strong>行囊</strong><span id="capacity">0 / 7</span></div><div id="tray" aria-label="行囊中的印记"></div><p>相同三枚自动消除 · 行囊满时需撤销或重来</p></section>
+<div class="actions"><button id="undo">↶ 撤销</button><button id="hint">✧ 寻路提示</button><button id="restart">↻ 重来</button></div><p id="saveNotice" class="save-note" role="status"></p>
+<details><summary>怎样轻装走得更远？</summary><p>只有每叠最上面的牌可以拿取。先看行囊，再看露出的牌面：同一种印记凑齐三枚就会自动消除。被遮住的牌会在上层拿走后露出。行囊前半程7格，后半程6格，填满就暂时无法继续。可随时撤销、重来或寻找安全下一步；提示不会自动帮你拿牌。每站清空所有牌即可解锁下一站。</p><p>键盘：Tab 选择可用牌，Enter 或空格取牌。进度保存在本机。无内购、无广告、无需账号。</p></details>
+<footer><a href="https://kindwolf-labs.github.io/play/lab/privacy.html">隐私说明</a><a href="https://github.com/kindwolf-labs/play/issues/new">问题反馈</a></footer>
+</main><dialog id="mapDialog"><div class="dialog-head"><div><span class="eyebrow">YOUR EXPEDITION</span><h2>远行地图</h2></div><button id="closeMap" aria-label="关闭地图">×</button></div><div class="chapter-nav"><button id="prevChapter" aria-label="上一章">←</button><strong id="mapChapter"></strong><button id="nextChapter" aria-label="下一章">→</button></div><div id="levelGrid"></div><p id="mapSummary"></p></dialog>
+<dialog id="result"><div class="result-mark" id="resultMark">✦</div><h2 id="resultTitle"></h2><div id="stars"></div><p id="resultText"></p><button id="next" class="primary">下一站 →</button><button id="resultUndo">撤销最后一步</button><button id="resultRestart">再走一次</button></dialog>
+<script type="module" src="game.js"></script></body></html>

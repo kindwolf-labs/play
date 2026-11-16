@@ -1,0 +1,11 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#123e52"><title>小桥设计师 · Bridgewright</title><link rel="stylesheet" href="style.css"></head><body>
+<main><header><a href="https://kindwolf-labs.github.io/play/lab/">← 游戏合集</a><button id="sound" aria-pressed="false">音效关</button></header>
+<section class="intro"><div class="eyebrow">BRIDGEWRIGHT / ISLAND CONNECTIONS</div><h1>小桥设计师<span>桥短一点，世界近一点。</span></h1><p>用有限木材，把每座小岛连成一个家。</p></section>
+<section class="dashboard"><div><span id="chapter"></span><strong id="level"></strong></div><button id="map">航海图</button></section>
+<section class="budget"><div><span>剩余木材</span><strong id="remaining"></strong></div><div><span>已用 / 预算</span><strong id="spent"></strong></div><div><span>已连通</span><strong id="linked"></strong></div></section>
+<div class="sea"><div class="compass">N<br>✧</div><svg id="board" viewBox="0 0 600 600" aria-label="岛屿与可建桥线路" role="group"></svg><div class="sea-caption">ARCHIPELAGO <span id="islandName"></span></div></div>
+<p id="status" role="status"></p><div class="actions"><button id="undo">↶ 撤销</button><button id="restart">重新规划</button><button id="hint">✦ 提示</button></div>
+<section id="win" hidden><div class="medal">✦</div><h2 id="winTitle"></h2><p id="winText"></p><button id="next">下一片群岛 →</button></section>
+<details id="help"><summary>一张好桥网，怎么设计？</summary><p>点击两岛之间的虚线建桥；数字是木材费用。再次点桥可拆除，木材全数返还。所有小岛连通且费用不超过预算即可通关。绕一个圈通常会浪费木材，先比较便宜路线。遇到预算用尽可以撤销或重来。提示会标出一条最省木材方案里的桥，使用提示最多获得两星。本游戏是路线预算解谜，不模拟桥梁承重。</p></details>
+<p id="saveStatus" role="status"></p><footer><a href="https://kindwolf-labs.github.io/play/lab/privacy.html">隐私说明</a><a href="https://github.com/kindwolf-labs/play/issues/new">反馈问题</a></footer></main>
+<dialog id="mapDialog"><div class="dialogHead"><h2>群岛航海图</h2><button id="closeMap" aria-label="关闭选关">×</button></div><p>六片海域 · 150 座桥网 · 完成一关解锁下一关</p><select id="chapterSelect" aria-label="选择章节"></select><div id="levels"></div></dialog><script type="module" src="game.js"></script></body></html>
