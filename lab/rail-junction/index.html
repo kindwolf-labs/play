@@ -1,0 +1,14 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#122d3b"><title>轨道值班室 · Rail Junction</title><link rel="stylesheet" href="style.css"></head><body><main>
+<header><a href="https://kindwolf-labs.github.io/play/">← 游戏合集</a><button id="help">值班手册</button></header>
+<section class="intro"><div class="eyebrow">RAIL JUNCTION / THE TIMETABLE ROOM</div><h1>轨道值班室<span>错开一拍，平安到站。</span></h1><p>路线已定，发车由你。安排每列车的出发时刻。</p></section>
+<section class="heading"><div><small id="chapter"></small><h2 id="level"></h2></div><button id="map">值班表</button></section>
+<section class="stats"><div><small>当前时刻</small><strong id="clock">准备</strong></div><div><small>最迟到站</small><strong id="deadline"></strong></div><div><small>已到站</small><strong id="arrived"></strong></div></section>
+<div id="board" role="img" aria-label="车站轨道示意图"></div>
+<p id="message" role="status" aria-live="polite"></p>
+<div class="transport"><button id="play" class="primary">▶ 开始运行</button><button id="step">单步 +1拍</button><button id="edit">↶ 返回编排</button></div>
+<section class="plan"><div class="section-label"><h3>发车时刻</h3><span>点选车次，突出路线</span></div><div id="trains"></div></section>
+<div class="tools"><button id="undo">撤销</button><button id="hint">调度提示</button><button id="restart">重新值班</button></div>
+<section id="win" hidden><div class="eyebrow">ALL TRAINS ARRIVED</div><h2 id="winTitle">本班平安抵达</h2><p id="winText"></p><button id="next" class="primary">下一班 →</button></section>
+<details id="manual"><summary>怎样当好一名调度员？</summary><p>每车沿同色线路每拍前进一格，不能中途停车。发车前在站外等待，离开终点后退出轨道。数字是发车时刻，0表示立即发车。</p><p>同一拍占用同一格、或两车在相邻格迎面交换位置，都算事故。所有车必须在最迟到站时刻内到达。选好时刻后可单步观察；返回编排后调整计划即可重跑。</p><p>这是离散回合的路线与时序谜题，不是现实铁路或物理模拟。150个班次分六章；前三班为渐进教学。</p></details>
+<p id="saveStatus"></p><footer><a href="https://kindwolf-labs.github.io/play/lab/privacy.html">隐私说明</a><a href="https://github.com/kindwolf-labs/play/issues/new">问题反馈</a></footer></main>
+<dialog id="mapDialog"><div class="dialog-title"><h2>150份值班表</h2><button id="closeMap" aria-label="关闭选关">×</button></div><p>完成本班，解锁下一班。已完成的班次可以重访。</p><select id="chapters" aria-label="选择章节"></select><div id="levels"></div></dialog><script type="module" src="game.js"></script></body></html>
