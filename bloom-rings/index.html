@@ -7,8 +7,8 @@
 <title>Bloom Rings</title>
 <link rel="icon" type="image/png" href="./icons/icon-192.png" />
 <link rel="apple-touch-icon" href="./icons/icon-180.png" />
-  <script type="module" crossorigin src="./assets/index-CXTsgdMA.js"></script>
-  <link rel="stylesheet" crossorigin href="./assets/index-9Kiuc69z.css">
+  <script type="module" crossorigin src="./assets/index-D3ltL7OV.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-BdwW_HGC.css">
 </head>
 <body>
 <div id="app">
@@ -30,8 +30,19 @@
       <div class="hud-level" id="hudLevel">Level 1</div>
       <div class="moves" id="movesBox"><div class="moves-label" data-t="moves"></div><div class="moves-num" id="movesNum">0</div></div>
     </header>
+    <section class="goal-panel" aria-label="Goal / 目标">
+      <div class="goal-heading"><strong data-t="goalTitle"></strong><b id="goalCount"></b></div>
+      <p data-t="goalBody"></p><div id="colorTargets" class="color-targets"></div>
+    </section>
     <div class="tip hidden" id="tip"></div>
     <canvas id="board"></canvas>
+    <div class="turn-controls">
+      <button id="turnLeft" class="turn-btn" aria-label="Turn counterclockwise / 逆时针转">↶</button>
+      <label><span data-t="chooseRing"></span><select id="ringSelect" aria-label="Ring / 圆环"></select></label>
+      <button id="turnRight" class="turn-btn" aria-label="Turn clockwise / 顺时针转">↷</button>
+      <button id="playHelp" class="turn-btn" aria-label="Help / 帮助">?</button>
+    </div>
+    <div id="turnStatus" class="turn-status" role="status" aria-live="polite"></div>
     <footer class="boosters">
       <button class="booster" id="btnUndo"><span class="bicon undo"></span><span class="blabel" data-t="undo"></span><em class="badge" id="undoN">3</em></button>
       <button class="booster" id="btnRestart"><span class="bicon restart"></span><span class="blabel" data-t="restart"></span></button>
