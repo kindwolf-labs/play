@@ -23,7 +23,7 @@
   const candidate = query.get('utm_source');
   const source = sources.includes(candidate) ? candidate : 'direct';
   let referrer = '';
-  try { const u = new URL(document.referrer); referrer = u.origin === location.origin ? u.pathname : u.origin; } catch {}
+  try { const u = new URL(document.referrer); referrer = u.origin === location.origin ? '' : u.origin; } catch {}
   let ready = false;
   const queue = [];
   function send(name, data = {}) {
