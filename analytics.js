@@ -51,7 +51,7 @@
   const selectors = {
     'bloom-rings': '#board,#turnLeft,#turnRight,#btnHint',
     'football-draft': '.draft [data-k="spin"],.draft [data-k="auto"],.draft [data-c],.draft .slot',
-    'gridiron-draft': '.draft .spin,.draft .wheelcv,.offerscreen button,.game button:not(.mute):not(.music)',
+    'gridiron-draft': '.draft .spin,.draft .wheelcv,.draft .auto-draft,.offerscreen button,.hub .tac,.game button:not(.mute):not(.music)',
     'magnet-foundry': 'button.coil,#hint',
     'orbit-switch': '#controls button,#hint', 'paper-fold-atlas': '#forward,#backward,#hint',
     'rail-junction': '#play,#step,#trains input,#hint', 'parcel-platform': '#lanes button,#rack button,#hint',
@@ -104,6 +104,19 @@
     begin();
     if (event.detail.event === 'level_complete' || event.detail.event === 'core_loop_complete') completion('level');
   });
+  if (game === 'gridiron-draft') {
+    // This funnel counts each milestone once per page visit and mode, across real input only.
+    const stages = new Set(['ps_first_offer', 'ps_first_pick', 'ps_draft_complete', 'ps_first_kickoff', 'ps_first_final']);
+    const recorded = new Set();
+    window.addEventListener('perfect-season-progress', event => {
+      const { event: step, mode, quick } = event.detail || {};
+      if (!started || !stages.has(step) || (mode !== 'free' && mode !== 'challenge')) return;
+      const key = `${mode}/${step}`;
+      if (recorded.has(key)) return;
+      recorded.add(key);
+      send(step, { ...base(), source, mode, quick: quick === true });
+    });
+  }
   function observeState() {
     if (!started) return;
     if (currentLevel !== getLevel()) return;
