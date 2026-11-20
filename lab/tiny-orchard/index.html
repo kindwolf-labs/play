@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4ebd6">
+  <meta name="description" content="合成果实，安排果筐，逐步修复一座果园。150 道原创订单谜题。">
+  <title>微光果园 · Tiny Orchard</title>
+  <link rel="stylesheet" href="style.css">
+<script defer src="../../analytics.js" data-game="tiny-orchard" data-release="web-20261120"></script></head>
+<body>
+  <main>
+    <nav><a id="home" href="https://kindwolf-labs.github.io/play/">← 游戏合集</a><div><a id="language" href="?lang=en" lang="en">EN</a><button id="map" type="button">关卡地图</button></div></nav>
+    <header class="hero">
+      <div><p id="chapter"></p><h1 id="title">微光果园</h1><p id="subtitle">装满订单，让果园重新开花。</p></div>
+      <div id="tree" class="tree" aria-hidden="true"><i></i><span></span><b></b></div>
+    </header>
+    <div class="levelbar"><strong id="level"></strong><span id="harvest"></span></div>
+    <section class="panel" aria-labelledby="order-title"><h2 id="order-title">待交订单</h2><div id="orders" class="orders"></div></section>
+    <section class="panel workshop" aria-labelledby="bin-title">
+      <div class="section-head"><h2 id="bin-title">果筐</h2><span id="capacity"></span></div>
+      <div id="bin" class="bin"></div>
+      <div class="supply"><div><strong id="supply-title">接下来到货</strong><div id="queue" class="queue"></div></div><button id="receive" type="button">收货</button></div>
+    </section>
+    <p id="status" role="status"></p>
+    <div class="tools"><button id="undo" type="button">撤销</button><button id="restart" type="button">重开</button><button id="hint" type="button">提示</button></div>
+    <section id="result" class="panel result" hidden><h2 id="result-title"></h2><p id="result-caption"></p><button id="next" type="button"></button></section>
+    <details><summary id="how-title">玩法说明</summary><p id="how"></p></details>
+    <p id="save-status" role="status" hidden></p>
+    <footer><a id="privacy" href="https://kindwolf-labs.github.io/play/lab/privacy.html">隐私</a><a id="feedback" href="https://github.com/kindwolf-labs/play/issues/new?title=Tiny%20Orchard">反馈</a></footer>
+  </main>
+  <dialog id="map-dialog"><div class="section-head"><h2 id="map-title">果园地图</h2><button id="close-map" type="button">关闭</button></div><label><span id="choose-chapter">章节</span> <select id="chapter-picker"></select></label><div id="levels"></div></dialog>
+  <script type="module" src="game.js"></script>
+</body>
+</html>

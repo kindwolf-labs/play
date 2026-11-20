@@ -11,10 +11,12 @@
   if (location.hostname !== 'kindwolf-labs.github.io' || location.protocol !== 'https:' || window.top !== window.self ||
       !path.startsWith('/play/') || disabled || (!validation && (navigator.webdriver || qaKeys.some(k => query.has(k)) || query.get('utm_source') === 'qa')) ||
       navigator.doNotTrack === '1' || window.doNotTrack === '1') return;
-  const games = ['pocket-blocks', 'arrow-harbor', 'copper-workshop', 'lantern-links', 'garden-current', 'orbit-switch', 'pocket-depot', 'parcel-platform', 'paper-fold-atlas', 'prism-post', 'rail-junction', 'magnet-foundry', 'tile-expedition', 'bridgewright'];
+  const stateEventGames = ['tiny-orchard', 'marble-relay', 'balance-pantry'];
+  const games = ['pocket-blocks', 'arrow-harbor', 'copper-workshop', 'lantern-links', 'garden-current', 'orbit-switch', 'pocket-depot', 'parcel-platform', 'paper-fold-atlas', 'prism-post', 'rail-junction', 'magnet-foundry', 'tile-expedition', 'bridgewright', ...stateEventGames];
   const match = path.match(/^\/play\/(?:en\/)?lab\/([^/]+)\/(?:index\.html)?$/);
   const primary = path.match(/^\/play\/(bloom-rings|football-draft|gridiron-draft)\/(?:index\.html)?$/);
   const game = primary?.[1] || (match && games.includes(match[1]) ? match[1] : null);
+  const requiresGameEvent = stateEventGames.includes(game);
   const collection = /^\/play\/(?:en\/|lab\/)?(?:index\.html)?$/.test(path);
   if (!game && !collection) return;
   const website = '97fedd6b-a37f-4cf7-8a80-9919c0eae4a1';
@@ -87,6 +89,7 @@
     if (!event.isTrusted) return;
     lastInput = performance.now();
     if (event.type === 'pointerdown' && event.target instanceof Element && event.target.closest('#restart,#reset,#btnRestart,#again,#replay')) { currentLevel = -1; completed = false; }
+    if (requiresGameEvent) return;
     if ((event.type === 'pointerdown' || event.type === 'click') && event.target instanceof Element && event.target.closest(actionSelector)) begin();
     if (event.type === 'keydown' && ['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','w','a','s','d','W','A','S','D','Enter',' '].includes(event.key)) {
       const board = document.querySelector('#board,#rings,.draft,.game');
@@ -118,7 +121,7 @@
     });
   }
   function observeState() {
-    if (!started) return;
+    if (!started || requiresGameEvent) return;
     if (currentLevel !== getLevel()) return;
     if (game === 'bloom-rings') { if (visible(document.querySelector('#mNext'))) completion('level'); }
     else if (game === 'football-draft') {
@@ -129,9 +132,11 @@
       if (!seasonDone && visible(document.querySelector('.screen.champ,.screen.resultscreen'))) { seasonDone = true; send('season_complete', base()); }
     } else if (visible(document.querySelector('#next'))) completion('level');
   }
-  let scheduled = false;
-  new MutationObserver(() => { if (!scheduled) { scheduled = true; requestAnimationFrame(() => { scheduled = false; observeState(); }); } })
-    .observe(document.body, { attributes: true, childList: true, subtree: true, characterData: true });
+  if (!requiresGameEvent) {
+    let scheduled = false;
+    new MutationObserver(() => { if (!scheduled) { scheduled = true; requestAnimationFrame(() => { scheduled = false; observeState(); }); } })
+      .observe(document.body, { attributes: true, childList: true, subtree: true, characterData: true });
+  }
   setInterval(() => {
     const now = performance.now(), delta = Math.min(2000, Math.max(0, now - previousTick)); previousTick = now;
     if (started && document.visibilityState === 'visible' && document.hasFocus() && now - lastInput < 30000) active += delta;
