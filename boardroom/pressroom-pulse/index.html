@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="description" content="A live press briefing becomes a rhythm arcade. Read the evidence, choose a responsible answer, and speak right on the beat.">
 <meta name="theme-color" content="#231b36">
-<title>Pressroom Pulse</title>
+<title>Huang Headline Check | Jensen Huang Comeback Arcade</title>
 <style>
 :root{font-family:"Trebuchet MS",system-ui,sans-serif;color:#fbf0fb;background:#21182e;--ink:#281c35;--honey:#ffd36e;--paper:#fff8df;--blue:#a7e8ff;--green:#a9efbd}
 *{box-sizing:border-box}body{margin:0;min-height:100dvh;background:radial-gradient(ellipse at top,#58334e,#231b36 61%)}[hidden]{display:none!important}
@@ -37,43 +37,104 @@ canvas{display:block;width:100%;aspect-ratio:2/1;background:#764667;touch-action
 </head>
 <body>
 <main>
-<header><div><p class="tag">Northwild News Desk</p><h1>Pressroom Pulse</h1></div><div class="tools"><button id="mute" class="minor" type="button" aria-pressed="true">Sound on</button><button id="pause" class="minor" type="button" disabled>Pause</button></div></header>
+<header><div><p class="tag">Jensen Huang · News Desk</p><h1>Huang Headline Check</h1></div><div class="tools"><button id="mute" class="minor" type="button" aria-pressed="true">Sound on</button><button id="pause" class="minor" type="button" disabled>Pause</button></div></header>
 <div class="headrail" aria-label="Briefing score"><span id="round">Opening questions</span><span>Trust <strong id="trust">5 / 5</strong></span><span>Score <strong id="score">0</strong></span><span>Best <strong id="best">—</strong></span></div>
 <section class="room">
 <canvas id="room" width="960" height="480" tabindex="0" aria-label="Animated press room and a timing rail. Answer on 1, 2 or 3 when the light crosses the target."></canvas>
-<div class="overlay" id="overlay"><div class="card"><h2 id="headline">You're live in three</h2><p id="message">Read the evidence. Choose a response when the microphone token crosses the yellow target.</p><button id="start" type="button">Go live</button></div></div>
+<div class="overlay" id="overlay"><div class="card"><h2 id="headline">You're live in three</h2><p id="message">Can you report Huang’s comeback accurately under deadline? Choose a response as the microphone crosses the target.</p><button id="start" type="button">Go live</button></div></div>
 </section>
-<div class="question" aria-label="Current question"><span id="counter">15 questions</span><strong id="question">The board has reversed its decision.</strong><p id="evidence">You’re at the podium to explain the change.</p></div>
+<div class="question" aria-label="Current question"><span id="counter">15 questions</span><strong id="question">What happened to Jensen Huang?</strong><p id="evidence">Reporting desk · November 12–23, 2026</p></div>
 <div class="choices" aria-label="Response options">
 <button class="choice" data-lane="0" type="button" disabled><small>1</small> Confirm</button>
 <button class="choice" data-lane="1" type="button" disabled><small>2</small> Explain</button>
 <button class="choice" data-lane="2" type="button" disabled><small>3</small> Verify</button></div>
 <p class="tip" id="tip" aria-live="polite">Confirm an official fact. Explain context or process. Verify anything unconfirmed.</p>
+<p class="tip">Factual prompts follow public records. Sample rumors are invented to test verification. <a href="https://nvidianews.nvidia.com/news/nvidia-announces-ceo-transition" target="_blank" rel="noopener">Nov 12 announcement</a> · <a href="https://s201.q4cdn.com/141608511/files/content_files/NVDA-3Q27-Earnings-Transcript.pdf" target="_blank" rel="noopener">Nov 17 call transcript</a> · <a href="https://investor.nvidia.com/news/press-release-details/2026/NVIDIA-Board-Reinstates-Jensen-Huang-as-President-CEO-and-Board-Director/default.aspx" target="_blank" rel="noopener">Nov 23 announcement</a></p>
 </main>
 <script>
 (() => {
   'use strict';
   const $=id=>document.getElementById(id),canvas=$('room'),ctx=canvas.getContext('2d'),buttons=[...document.querySelectorAll('.choice')];
   const W=960,H=480,LEFT=114,RIGHT=846,MAX_TRUST=5;
-  const rounds=['Opening questions','Follow-ups','The closing minute'];
+  const rounds=['Nov 12 · Departure','Nov 17 · Rejection','Nov 23 · Return'];
   const answers=['Confirm','Explain','Verify'];
   const questions=[
-    ['Has the director returned?','A signed bulletin confirms the reinstatement.',0],
-    ['Why did the office post two notices?','One notice recorded the first vote. The second recorded the reversal.',1],
-    ['Was the decision unanimous?','No official vote count has been released.',2],
-    ['Do tomorrow’s opening hours still stand?','The approved schedule says doors open at nine.',0],
-    ['Who handles deliveries while the director travels?','Describe the rotating duty team and the handover procedure.',1],
-    ['Is a new booth opening across town?','Only an anonymous tip mentions another booth.',2],
-    ['Does the new notice cancel the old schedule?','Explain that leadership changed, while operating hours stayed the same.',1],
-    ['Can contractors use the new badge today?','The signed access notice says the badges are active.',0],
-    ['Will the committee add a second vote tomorrow?','There is no published agenda or formal confirmation.',2],
-    ['Why is the handover note dated yesterday?','Walk through when it was drafted and when it took effect.',1],
-    ['Did the board keep the weekend service?','The final, approved service calendar still includes both days.',0],
-    ['Is the leaked budget sheet authentic?','An image is circulating. Nobody has authenticated it.',2],
-    ['What changes when the new notice takes effect?','Explain the difference between the public announcement and the handover date.',1],
-    ['Can we quote the spokesperson’s statement?','The press desk has marked the statement on record.',0],
-    ['Did a private meeting happen before the vote?','There is no on-record account of a private meeting.',2],
-  ];
+  [
+    "Was Jensen Huang fired on Nov 12?",
+    "Explain the official wording. NVIDIA announced that Huang resigned.",
+    1
+  ],
+  [
+    "Who became interim CEO?",
+    "NVIDIA named CFO Colette Kress interim CEO in its Nov 12 announcement.",
+    0
+  ],
+  [
+    "Did he leave only the CEO role?",
+    "Explain that the announcement covered president, CEO and board membership.",
+    1
+  ],
+  [
+    "Is a circulating private text authentic?",
+    "The public announcements do not authenticate that image.",
+    2
+  ],
+  [
+    "Did Huang briefly stop being CEO?",
+    "His resignation took effect immediately on Nov 12.",
+    0
+  ],
+  [
+    "What did the chair say on Nov 17?",
+    "The earnings call transcript says the board did not intend to reinstate Huang.",
+    0
+  ],
+  [
+    "Did the Nov 17 position guarantee no later return?",
+    "Explain that it described the board’s position at that time.",
+    1
+  ],
+  [
+    "Did the earnings statement identify the interim CEO?",
+    "The Nov 17 results release describes Kress as interim CEO.",
+    0
+  ],
+  [
+    "Is a social post about a secret deal verified?",
+    "No public evidence is supplied for that claim.",
+    2
+  ],
+  [
+    "What happened between the notices?",
+    "Explain the difference between publicly reported decisions and unsupported motives.",
+    1
+  ],
+  [
+    "Did Huang return?",
+    "NVIDIA announced reinstatement on Nov 23.",
+    0
+  ],
+  [
+    "Which posts did he get back?",
+    "The Nov 23 release names president, CEO and board member.",
+    0
+  ],
+  [
+    "How far apart were the announcements?",
+    "Explain that 11 days separated the Nov 12 and Nov 23 releases.",
+    1
+  ],
+  [
+    "Can we quote an anonymous claim about an individual vote?",
+    "An unproven claim cannot establish how any director voted.",
+    2
+  ],
+  [
+    "Did the company thank the interim CEO?",
+    "The reinstatement announcement thanks Colette Kress for her service.",
+    0
+  ]
+];
   const number=key=>{try{return Number(localStorage.getItem(key))||0;}catch{return 0;}};
   const save=(key,value)=>{try{localStorage.setItem(key,String(value));}catch{}};
   const colors=['#aff2bd','#b1e9ff','#ffd676'];

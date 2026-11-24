@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#142c2c">
-<title>Interim Shift</title>
+<title>Kress: The Interim Shift | Jensen Huang Comeback Arcade</title>
 <meta name="description" content="Run a cartoon chip fab for one frantic shift. Route orders, vent heat, and hand over a healthy factory.">
 <style>
 :root{color-scheme:dark;--bg:#162b2b;--dark:#183f38;--ink:#1a2c2a;--paper:#f8f2d9;--cream:#f3ebce;--panel:#e2edc7;--mint:#9ae5c3;--orange:#ff8753;--gold:#ffd47b;--line:#2c4c42;--danger:#b34436;font:16px/1.35 "Trebuchet MS",system-ui,sans-serif;color:var(--cream);background:var(--bg)}
@@ -15,28 +15,28 @@
 .dispatch{border-top:2px solid #14392b;padding:9px 11px;background:#31584a}.dispatch-head{display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:.75rem;font-weight:900}.orders{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:8px}.order{min-width:0;min-height:72px;text-align:left;background:#e7efca;color:#163a33;border:2px solid #203e33;border-radius:8px;box-shadow:2px 3px 0 #133024;padding:5px 6px;font-size:.75rem;font-weight:950;display:grid;gap:3px}.order.empty{background:#29483d;border-color:#708875;color:#c4d4a3;box-shadow:none;font-weight:650}.order[data-selected="true"]{background:#ffdc82;outline:2px solid #fff1b9}.order[data-urgent="true"]{border-color:#9e4434;color:#812f23}.order b,.order span{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.order small{font-size:.62rem;opacity:.76}.order-time{font-variant-numeric:tabular-nums}
 .side{background:var(--paper);color:var(--ink);border:2px solid #acc49c;border-radius:14px;box-shadow:4px 4px 0 #0a2418;padding:17px}.kicker{font-size:.7rem;font-weight:1000;letter-spacing:.12em;text-transform:uppercase;color:#426c4f;margin-bottom:7px}h1,h2,p{margin:0}h1{font-size:clamp(3rem,5.2vw,5.35rem);font-weight:1000;letter-spacing:-.09em;line-height:.83;text-transform:uppercase}h2{font-size:clamp(1.6rem,3.4vw,2.25rem);font-weight:1000;letter-spacing:-.06em;line-height:1}.lead{margin:12px 0 0;font-size:.94rem;font-weight:750;max-width:32ch}.instructions{padding-left:19px;display:grid;gap:5px;margin:15px 0;font-size:.8rem;font-weight:760}.primary{min-height:45px;width:100%;background:#ffaf72;border:2px solid #274737;border-radius:8px;box-shadow:3px 3px 0 #274737;color:var(--ink);padding:8px 10px;font-weight:1000}.primary:hover{background:#fac787}.primary:disabled{background:#d7d5b7;box-shadow:none}.side-foot{margin-top:10px;font-size:.72rem;color:#5b6248;font-weight:800}.panel{padding:9px 0;border-bottom:1px solid #b6be9b}.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}.stats b{display:block;margin-top:1px;font-size:1.42rem;font-variant-numeric:tabular-nums}.stats small,.panel-label{font-size:.72rem;font-weight:900;color:#53624c}.stats .strikes{letter-spacing:.07em;color:#8d352a}.track{margin:5px 0 7px;height:8px;border:1px solid #526a51;background:#d6e1ba;border-radius:8px;overflow:hidden}.track i{background:#4e8c68}.track.heat i{background:linear-gradient(90deg,#4e8c68,#e28b55)}.track.hot i{background:#bd4f3c}.vent{margin-top:9px}.feedback{margin-top:10px;min-height:30px;color:#5a694d;font-size:.78rem;font-weight:800}.feedback.alarm{color:#99362a}.footer{margin:12px 0 0;color:#c1cfaa;font-size:.72rem}.result-total{font-variant-numeric:tabular-nums;font-size:2.35rem;font-weight:1000;margin:9px 0 6px}.result-buttons{display:flex;gap:8px;margin-top:13px}.result-buttons button:last-child{background:#ced9b4;border:2px solid #3b593c;border-radius:7px;font-size:.8rem;font-weight:900}.kb{font-size:.73rem;border-top:1px solid #adbc9c;margin-top:11px;padding-top:6px;color:#53624b}.kb summary{font-weight:950;cursor:pointer}
 @keyframes blink{0%,46%,64%,100%{opacity:1}53%{opacity:.2}}@keyframes scan{0%,100%{transform:translate(-50%,0) rotate(-8deg)}50%{transform:translate(-50%,-10px) rotate(7deg)}}@keyframes clear{35%{background:#d1f3a1}}@media(max-width:750px){.shell{width:calc(100% - 26px);padding:12px 0 18px}.layout{grid-template-columns:minmax(0,1fr);gap:10px;margin-top:10px}.machine{height:clamp(95px,24vw,160px)}.bays{padding:8px;gap:7px}.side{padding:13px}.factory,.side{box-shadow:3px 3px 0 #0a2418}.factory-head{padding:6px 8px}.dispatch{padding:7px}.order{padding:4px;min-height:66px;font-size:.69rem;gap:2px}.order small{font-size:.57rem}.instructions{margin:11px 0}.lead{margin-top:9px}.bay-action{min-height:43px;padding:5px 7px}.bay-title{padding:6px 6px 0;font-size:.66rem}.stats b{font-size:1.19rem}.panel{padding:6px 0}.feedback{min-height:21px}.side .vent{min-height:38px}}@media(max-width:370px){.brand{font-size:.87rem}.button-min,.clock{padding-left:7px;padding-right:7px}.orders{gap:4px}.order{font-size:.64rem}.order-key{display:none}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
-</style>
+.brand{min-width:0;white-space:normal}.footer a{color:inherit}</style>
 </head>
 <body><main class="shell" id="app" data-stage="menu">
-<header class="top"><div class="brand"><span class="brand-mark" aria-hidden="true">◈</span> Interim Shift</div><div class="top-right"><button class="button-min" type="button" id="mute" aria-pressed="true">Sound on</button><button class="button-min" type="button" id="pause" hidden>Pause</button><output class="clock" id="clock" aria-label="Seconds left">70s</output></div></header>
+<header class="top"><div class="brand"><span class="brand-mark" aria-hidden="true">◈</span> Kress: The Interim Shift</div><div class="top-right"><button class="button-min" type="button" id="mute" aria-pressed="true">Sound on</button><button class="button-min" type="button" id="pause" hidden>Pause</button><output class="clock" id="clock" aria-label="Seconds left">70s</output></div></header>
 <div class="layout">
 <section id="factory" class="factory" aria-label="Chip assembly factory"><div class="factory-head"><span>Quill Circuits · Fabrication</span><span class="power-tag" id="power">Standby</span></div>
 <div class="bays" id="bays"></div>
 <div class="dispatch"><div class="dispatch-head"><span>Work order queue</span><span id="queue-count">0 / 4</span></div><div class="orders" id="orders"></div></div></section>
-<section class="side" id="intro"><div class="kicker">Acting chief · one shift</div><h1>Interim<br>Shift</h1>
-<p class="lead">The chair is empty. The chip orders are very much not.</p>
-<ol class="instructions"><li>Pick an order, then send it to a free bay.</li><li>Match the bay to save time and heat.</li><li>Vent heat and clear 10 orders before handover.</li></ol>
+<section class="side" id="intro"><div class="kicker">Nov 12–23 · Colette Kress</div><h1>Kress: The<br>Interim Shift</h1>
+<p class="lead">Jensen Huang has stepped down. Colette Kress is interim CEO. Keep the fictional chip lines moving until the handover.</p>
+<ol class="instructions"><li>Pick an order, then send it to a free bay.</li><li>Match the bay to save time and heat.</li><li>Clear 4 orders by the Nov 17 checkpoint and 10 by the Nov 23 handover.</li></ol>
 <button type="button" class="primary" id="start">Clock in</button><p class="side-foot" id="best">Best shift: —</p>
 <details class="kb"><summary>Keyboard controls</summary><p>1–4 selects an order. Q sends to Precision. E sends to Volume. V vents. Esc pauses. M toggles sound.</p></details>
 </section>
-<section class="side" id="play" hidden><div class="kicker">Handover targets</div><h2>Keep the line<br>moving.</h2>
+<section class="side" id="play" hidden><div class="kicker" id="dated-shift">Nov 12 · Kress takes over</div><h2>Keep the line<br>moving.</h2>
 <div class="panel stats"><div><small>Shipped on time</small><b id="done">0 / 10</b></div><div><small>Report strikes left</small><b class="strikes" id="strikes">3</b></div></div>
 <div class="panel"><div class="panel-label" id="heat-label">Core heat 0%</div><div class="track heat" id="heat"><i></i></div><button type="button" class="primary vent" id="vent">Vent heat [V]</button></div>
 <div class="panel"><div class="panel-label">Selected order</div><p id="selected">Pick an order below the bays.</p></div>
 <p class="feedback" id="feedback" aria-live="polite"></p></section>
 <section class="side" id="paused" hidden><div class="kicker">Line paused</div><h2>Break room</h2><p class="lead">Orders and heat won’t change while you’re away.</p><button type="button" class="primary" id="resume" style="margin-top:14px">Resume shift</button></section>
 <section class="side" id="result" hidden><div class="kicker" id="badge"></div><h2 id="headline"></h2><p class="result-total" id="score"></p><p class="lead" id="details"></p><div class="result-buttons"><button type="button" class="primary" id="retry">New shift</button><button type="button" id="title">Title</button></div></section>
-</div><p class="footer">Quill Circuits is a fictional chip company. Your best shift stays on this device.</p>
+</div><p class="footer">Colette Kress served as interim CEO. The factory incidents and orders are invented. <a href="https://nvidianews.nvidia.com/news/nvidia-announces-ceo-transition" target="_blank" rel="noopener">Nov 12 announcement</a> · <a href="https://s201.q4cdn.com/141608511/files/content_files/NVDA-3Q27-Earnings-Transcript.pdf" target="_blank" rel="noopener">Nov 17 call transcript</a> · <a href="https://investor.nvidia.com/news/press-release-details/2026/NVIDIA-Board-Reinstates-Jensen-Huang-as-President-CEO-and-Board-Director/default.aspx" target="_blank" rel="noopener">Nov 23 announcement</a></p>
 </main>
 <script>
 'use strict';
@@ -201,7 +201,10 @@ function addArrivals(){
 function update(dt){
   time=Math.min(shiftEnd,time+dt);
   if(!surge&&time>=33){
-    surge=true;heat=Math.min(100,heat+20);say('Power surge. Three rush arrivals are clustered together.',true);
+    byId('dated-shift').textContent='Nov 17 · Earnings call';
+    surge=true;heat=Math.min(100,heat+20);
+    if(done<4) loseStrike('Nov 17 checkpoint: fewer than four orders delivered.');
+    else say('Power surge. Nov 17 checkpoint met; a fictional rush adds heat.',true);
     beep('miss');
   }
   const heatRate=lanes.reduce((n,lane)=>n+(lane?lane.job.model.heat*(lane.matched?1:1.4):0),0);
@@ -229,14 +232,14 @@ function update(dt){
   });
   addArrivals();
   if(state==='running'&&time>=shiftEnd)finish(done>=targetCount,done>=targetCount?
-    done+' orders shipped on time. The morning crew takes it from here.':
+    done+' orders shipped on time. Nov 23: NVIDIA announces Huang’s return.':
     'You shipped '+done+' of the '+targetCount+' orders required for handover.');
 }
 function begin(){
   time=0;last=performance.now();heat=16;ventAt=0;strikes=3;done=0;points=0;arrival=0;selected=-1;surge=false;
   queue=[];lanes=[null,null];shipped=[-1,-1];feedback='';alarm=false;
   dispatch=arrivals.map((_,i)=>models[(i%2)+(i===0?0:Math.random()<.5?2:0)]);
-  state='running';addArrivals();beep('load');paint();orderNodes[0].focus({preventScroll:true});
+  state='running';byId('dated-shift').textContent='Nov 12 · Kress takes over';addArrivals();beep('load');paint();orderNodes[0].focus({preventScroll:true});
 }
 function pause(){
   if(state!=='running')return;

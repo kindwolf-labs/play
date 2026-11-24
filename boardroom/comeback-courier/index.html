@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="description" content="Dash back to HQ in a hand-drawn arcade runner. Leap traffic, duck security beams and reclaim three access cards.">
 <meta name="theme-color" content="#102c36">
-<title>Comeback Courier</title>
+<title>Jensen’s Return | Comeback Runner</title>
 <style>
 :root{font-family:"Trebuchet MS",system-ui,sans-serif;color:#fff6db;background:#102c36;--ink:#102c36;--cream:#fff4d5;--yellow:#ffcd59;--mint:#95ecbd}
 *{box-sizing:border-box}body{margin:0;min-height:100dvh;background:radial-gradient(ellipse at top,#16606b,#102c36 57%)}
@@ -35,15 +35,16 @@ canvas{display:block;width:100%;aspect-ratio:16/9;background:#7cd9d5;touch-actio
 </head>
 <body>
 <main>
-<header><div><p class="tag">Northwild Dispatch</p><h1>Comeback Courier</h1></div><div class="tools"><button id="sound" class="utility" type="button" aria-pressed="true">Sound on</button><button id="pause" class="utility" type="button" disabled>Pause</button></div></header>
-<div class="hud" aria-label="Run status"><span id="district">Market Row</span><span>Cards <strong id="cards">0 / 3</strong></span><span>Hearts <strong id="hearts">3 / 3</strong></span><span>Best <strong id="best">—</strong></span></div>
+<header><div><p class="tag">The Huang timeline · November 2026</p><h1>Jensen’s Return</h1></div><div class="tools"><button id="sound" class="utility" type="button" aria-pressed="true">Sound on</button><button id="pause" class="utility" type="button" disabled>Pause</button></div></header>
+<div class="hud" aria-label="Run status"><span id="district">Nov 12 · Departure</span><span>Cards <strong id="cards">0 / 3</strong></span><span>Hearts <strong id="hearts">3 / 3</strong></span><span>Best <strong id="best">—</strong></span></div>
 <div class="track" aria-hidden="true"><span id="track"></span></div>
 <section class="stage">
 <canvas id="world" width="960" height="540" tabindex="0" aria-label="Side-scrolling city route. Space to jump, down arrow to slide."></canvas>
-<div class="overlay" id="overlay"><div class="card"><h2 id="headline">The route is back on</h2><p id="message">The board called you back. Grab three keycards from the delivery route and reach HQ.</p><button type="button" id="start">Start the run</button></div></div>
+<div class="overlay" id="overlay"><div class="card"><h2 id="headline">Three dates. One comeback.</h2><p id="message">Carry the Nov 12, 17 and 23 news cards across an imagined city. Deliver all three to unlock the return.</p><button type="button" id="start">Start the run</button></div></div>
 </section>
 <div class="control-row"><button class="control" id="jump" type="button" disabled>↑ Jump <small>SPACE</small></button><button class="control" id="slide" type="button" disabled>↓ Slide <small>DOWN</small></button></div>
 <p class="note" id="tip" aria-live="polite">Jump over carts. Slide under striped beams. Keycards glow gold.</p>
+<p class="note">The news dates are real. The runner and delivery route are fictional. <a href="https://nvidianews.nvidia.com/news/nvidia-announces-ceo-transition" target="_blank" rel="noopener">Nov 12 announcement</a> · <a href="https://s201.q4cdn.com/141608511/files/content_files/NVDA-3Q27-Earnings-Transcript.pdf" target="_blank" rel="noopener">Nov 17 call transcript</a> · <a href="https://investor.nvidia.com/news/press-release-details/2026/NVIDIA-Board-Reinstates-Jensen-Huang-as-President-CEO-and-Board-Director/default.aspx" target="_blank" rel="noopener">Nov 23 announcement</a></p>
 </main>
 <script>
 (() => {
@@ -51,16 +52,16 @@ canvas{display:block;width:100%;aspect-ratio:16/9;background:#7cd9d5;touch-actio
   const $=id=>document.getElementById(id), canvas=$('world'), ctx=canvas.getContext('2d');
   const W=960,H=540,FLOOR=417,RUNNER=155,GOAL=7770,STEP=1/120;
   const district=[
-    {name:'Market Row',start:0,sky:'#85e5d3',haze:'#fff1a9',far:'#56b9af',near:'#309392',road:'#30465c'},
-    {name:'Skyline Overpass',start:2580,sky:'#a8c8fc',haze:'#f8dbff',far:'#818ed3',near:'#485b98',road:'#35455e'},
-    {name:'Headquarters',start:5200,sky:'#ffc8ad',haze:'#ffe09f',far:'#ef977d',near:'#bd6578',road:'#4c3f54'},
+    {name:'Nov 12 · Departure',start:0,sky:'#85e5d3',haze:'#fff1a9',far:'#56b9af',near:'#309392',road:'#30465c'},
+    {name:'Nov 17 · Return rejected',start:2580,sky:'#a8c8fc',haze:'#f8dbff',far:'#818ed3',near:'#485b98',road:'#35455e'},
+    {name:'Nov 23 · Reinstatement',start:5200,sky:'#ffc8ad',haze:'#ffe09f',far:'#ef977d',near:'#bd6578',road:'#4c3f54'},
   ];
   const obstacles=[
     [648,'cart'],[1120,'beam'],[1545,'cart'],[2040,'beam'],[2450,'cart'],
     [2810,'beam'],[3260,'cart'],[3640,'beam'],[4100,'cart'],[4540,'beam'],[4960,'cart'],
     [5400,'cart'],[5810,'beam'],[6330,'cart'],[6820,'beam'],[7300,'cart'],
   ].map(([x,type])=>({x,type,wide:type==='cart'?58:108}));
-  const badges=[{x:664,y:FLOOR-112},{x:3648,y:FLOOR-17},{x:6346,y:FLOOR-113}];
+  const badges=[{x:664,y:FLOOR-112,day:12,fact:'Huang resigns. Kress becomes interim CEO.'},{x:3648,y:FLOOR-17,day:17,fact:'The chair says the board does not plan to reinstate Huang.'},{x:6346,y:FLOOR-113,day:23,fact:'NVIDIA announces Huang’s reinstatement.'}];
   const number=key=>{try{return Number(localStorage.getItem(key))||0;}catch{return 0;}};
   const persist=(key,value)=>{try{localStorage.setItem(key,String(value));}catch{}};
   const art=(seed)=>((Math.sin(seed*79.381+4.29)*53761.298)%1+1)%1;
@@ -105,7 +106,7 @@ canvas{display:block;width:100%;aspect-ratio:16/9;background:#7cd9d5;touch-actio
       change('playing');
       return;
     }
-    reset();$('tip').textContent='First keycard floats over the market cart. Jump just before you reach it.';
+    reset();$('tip').textContent='Jump the cart for the Nov 12 resignation bulletin.';
     tone('start');change('playing');
   }
   function pause(){if(active())change('paused','Route paused','Take a breath. Your place on the route is saved while this tab is open.','Resume');}
@@ -157,7 +158,7 @@ canvas{display:block;width:100%;aspect-ratio:16/9;background:#7cd9d5;touch-actio
     const zone=run.x>=district[2].start?2:run.x>=district[1].start?1:0;
     if(zone!==currentDistrict){
       currentDistrict=zone;run.speed=302+zone*18;tone('start');
-      $('tip').textContent=zone===1?'Overpass keycard is underneath a striped beam. Slide low.':'Final keycard is above a luggage cart. Then head for the HQ doors.';
+      $('tip').textContent=zone===1?'Slide under the beam for the Nov 17 rejection bulletin.':'Jump for the Nov 23 reinstatement bulletin, then reach the headquarters.';
       updateHud();
     }
     const feet=FLOOR-player.lift, body=feet-(player.slide>0?28:65);
@@ -173,7 +174,7 @@ canvas{display:block;width:100%;aspect-ratio:16/9;background:#7cd9d5;touch-actio
     for(const [index,badge] of badges.entries()){
       if(run.cards[index]||Math.abs(badge.x-run.x)>34||badge.y+15<body||badge.y-15>feet)continue;
       run.cards[index]=true;tone('card');spray(RUNNER,badge.y,'#ffdf70',17,.74);
-      $('tip').textContent='Keycard secured. '+(3-run.cards.filter(Boolean).length)+' remaining.';
+      $('tip').textContent='Nov '+badge.day+' · '+badge.fact;
       updateHud();
     }
     if(run.x>=GOAL)finish();
@@ -298,7 +299,7 @@ canvas{display:block;width:100%;aspect-ratio:16/9;background:#7cd9d5;touch-actio
       if(run.cards[i]||x<-50||x>W+50)continue;
       ellipse(x,y,29,29,'#feed835d');box(x-18,y-10,36,20,'#ffe275',5,'#6d4d40');
       box(x-11,y-4,8,8,'#56bdb0',2);box(x+1,y-5,11,2,'#786237',1);box(x+1,y,8,2,'#786237',1);
-      text('✦',x,y-20,14,'#ffe8a0','center');
+      text('NOV '+item.day,x,y-20,17,'#ffe8a0','center');
     }
     character(time);
     for(const item of particles){
