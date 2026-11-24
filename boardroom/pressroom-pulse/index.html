@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="A live press briefing becomes a rhythm arcade. Read the evidence, choose a responsible answer, and speak right on the beat.">
+<meta name="theme-color" content="#231b36">
+<title>Pressroom Pulse</title>
+<style>
+:root{font-family:"Trebuchet MS",system-ui,sans-serif;color:#fbf0fb;background:#21182e;--ink:#281c35;--honey:#ffd36e;--paper:#fff8df;--blue:#a7e8ff;--green:#a9efbd}
+*{box-sizing:border-box}body{margin:0;min-height:100dvh;background:radial-gradient(ellipse at top,#58334e,#231b36 61%)}[hidden]{display:none!important}
+button{font:inherit;touch-action:manipulation;cursor:pointer}button:focus-visible,canvas:focus-visible{outline:3px solid #c7edff;outline-offset:3px}
+main{width:min(100%,980px);margin:auto;padding:clamp(12px,4vw,31px) clamp(10px,4vw,28px) max(24px,env(safe-area-inset-bottom))}
+header{display:flex;align-items:end;justify-content:space-between;gap:7px 15px;flex-wrap:wrap;margin-bottom:13px}
+h1{font-family:"Arial Black","Trebuchet MS",sans-serif;font-size:clamp(32px,7vw,61px);font-weight:1000;letter-spacing:-.075em;line-height:1.02;margin:0}
+.tag{color:#ffdc8b;font-size:11px;font-weight:900;text-transform:uppercase;letter-spacing:.16em;margin:0 0 4px}
+.tools{display:flex;gap:5px}.minor{min-height:40px;color:#fff4e4;background:#33243c;border:1px solid #d8b5d285;border-radius:9px;padding:0 10px;font-size:13px;font-weight:850}
+.headrail{display:flex;gap:6px 14px;justify-content:space-between;flex-wrap:wrap;align-items:center;padding:8px 12px;background:#1b1826;border:1px solid #dab3cb66;border-radius:13px 13px 0 0;font-size:clamp(11px,2.6vw,16px);font-weight:850}
+.headrail strong{color:var(--honey)}.room{position:relative;border:1px solid #dab3cb66;border-top:0;overflow:hidden;border-radius:0 0 13px 13px;box-shadow:0 13px 30px #0004}
+canvas{display:block;width:100%;aspect-ratio:2/1;background:#764667;touch-action:none}
+.overlay{display:grid;place-items:center;position:absolute;inset:0;background:#2b1e3e83;padding:6px}
+.card{width:min(93%,425px);text-align:center;border-radius:15px;border:3px solid var(--ink);color:var(--ink);background:var(--paper);padding:clamp(8px,2.6vw,22px);box-shadow:5px 5px 0 #1c172d}
+.card h2{font-family:"Arial Black","Trebuchet MS",sans-serif;font-weight:1000;letter-spacing:-.055em;font-size:clamp(21px,4.1vw,35px);line-height:1.09;margin:0 0 5px}
+.card p{font-size:clamp(11px,2.6vw,15px);line-height:1.32;margin:0 0 8px}.card button{min-height:40px;padding:5px 14px;background:var(--honey);border:2px solid var(--ink);border-radius:8px;box-shadow:0 3px var(--ink);color:var(--ink);font-weight:900}
+.question{display:grid;gap:3px;margin-top:11px;padding:9px 12px 11px;border-radius:11px;background:#382a45;border:1px solid #e1b8d346;min-height:79px}
+.question span{color:#ffdc95;text-transform:uppercase;font-size:10px;font-weight:900;letter-spacing:.12em}
+.question strong{font-size:clamp(14px,3.5vw,20px);line-height:1.15}
+.question p{color:#d9cadf;font-size:clamp(11px,2.6vw,14px);line-height:1.28;margin:0}
+.choices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin:9px 0}
+.choice{display:flex;align-items:center;justify-content:center;gap:5px;min-height:54px;border:2px solid #211c34;border-radius:10px;box-shadow:0 4px 0 #160f20;color:var(--ink);font-size:clamp(13px,3.1vw,18px);font-weight:900;padding:3px}
+.choice[data-lane="0"]{background:var(--green)}.choice[data-lane="1"]{background:var(--blue)}.choice[data-lane="2"]{background:var(--honey)}
+.choice small{font-size:11px;opacity:.65}.choice:disabled{opacity:.53;cursor:default}.choice:not(:disabled):active,.card button:active{transform:translateY(2px);box-shadow:none}
+.tip{color:#f0d9f1;margin:12px 2px 0;font-size:clamp(11px,2.65vw,14px);line-height:1.3;min-height:2.5em}
+@media(max-width:420px){header{margin-bottom:8px}.card p{margin-bottom:5px}.card button{min-height:34px}.choice small{display:none}.question{margin-top:8px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<main>
+<header><div><p class="tag">Northwild News Desk</p><h1>Pressroom Pulse</h1></div><div class="tools"><button id="mute" class="minor" type="button" aria-pressed="true">Sound on</button><button id="pause" class="minor" type="button" disabled>Pause</button></div></header>
+<div class="headrail" aria-label="Briefing score"><span id="round">Opening questions</span><span>Trust <strong id="trust">5 / 5</strong></span><span>Score <strong id="score">0</strong></span><span>Best <strong id="best">—</strong></span></div>
+<section class="room">
+<canvas id="room" width="960" height="480" tabindex="0" aria-label="Animated press room and a timing rail. Answer on 1, 2 or 3 when the light crosses the target."></canvas>
+<div class="overlay" id="overlay"><div class="card"><h2 id="headline">You're live in three</h2><p id="message">Read the evidence. Choose a response when the microphone token crosses the yellow target.</p><button id="start" type="button">Go live</button></div></div>
+</section>
+<div class="question" aria-label="Current question"><span id="counter">15 questions</span><strong id="question">The board has reversed its decision.</strong><p id="evidence">You’re at the podium to explain the change.</p></div>
+<div class="choices" aria-label="Response options">
+<button class="choice" data-lane="0" type="button" disabled><small>1</small> Confirm</button>
+<button class="choice" data-lane="1" type="button" disabled><small>2</small> Explain</button>
+<button class="choice" data-lane="2" type="button" disabled><small>3</small> Verify</button></div>
+<p class="tip" id="tip" aria-live="polite">Confirm an official fact. Explain context or process. Verify anything unconfirmed.</p>
+</main>
+<script>
+(() => {
+  'use strict';
+  const $=id=>document.getElementById(id),canvas=$('room'),ctx=canvas.getContext('2d'),buttons=[...document.querySelectorAll('.choice')];
+  const W=960,H=480,LEFT=114,RIGHT=846,MAX_TRUST=5;
+  const rounds=['Opening questions','Follow-ups','The closing minute'];
+  const answers=['Confirm','Explain','Verify'];
+  const questions=[
+    ['Has the director returned?','A signed bulletin confirms the reinstatement.',0],
+    ['Why did the office post two notices?','One notice recorded the first vote. The second recorded the reversal.',1],
+    ['Was the decision unanimous?','No official vote count has been released.',2],
+    ['Do tomorrow’s opening hours still stand?','The approved schedule says doors open at nine.',0],
+    ['Who handles deliveries while the director travels?','Describe the rotating duty team and the handover procedure.',1],
+    ['Is a new booth opening across town?','Only an anonymous tip mentions another booth.',2],
+    ['Does the new notice cancel the old schedule?','Explain that leadership changed, while operating hours stayed the same.',1],
+    ['Can contractors use the new badge today?','The signed access notice says the badges are active.',0],
+    ['Will the committee add a second vote tomorrow?','There is no published agenda or formal confirmation.',2],
+    ['Why is the handover note dated yesterday?','Walk through when it was drafted and when it took effect.',1],
+    ['Did the board keep the weekend service?','The final, approved service calendar still includes both days.',0],
+    ['Is the leaked budget sheet authentic?','An image is circulating. Nobody has authenticated it.',2],
+    ['What changes when the new notice takes effect?','Explain the difference between the public announcement and the handover date.',1],
+    ['Can we quote the spokesperson’s statement?','The press desk has marked the statement on record.',0],
+    ['Did a private meeting happen before the vote?','There is no on-record account of a private meeting.',2],
+  ];
+  const number=key=>{try{return Number(localStorage.getItem(key))||0;}catch{return 0;}};
+  const save=(key,value)=>{try{localStorage.setItem(key,String(value));}catch{}};
+  const colors=['#aff2bd','#b1e9ff','#ffd676'];
+  const timing=(index)=>index<5?{span:3.14,beat:2,window:.28}:index<10?{span:2.66,beat:1.71,window:.24}:{span:2.35,beat:1.53,window:.21};
+  let phase='menu',index=0,clock=0,trust=MAX_TRUST,score=0,streak=0,landed=0,perfect=0,answered=false,beatPlayed=false;
+  let feedback='',feedbackType='',pulse=0,flash=0,lastFrame=0,artTime=0;
+  let muted=Boolean(number('pp-muted')),best=number('pp-best'),audio=null;
+  const active=()=>phase==='live';
+  function tone(kind){
+    if(muted)return;
+    try{
+      audio??=new (window.AudioContext||window.webkitAudioContext)();
+      if(audio.state==='suspended')void audio.resume().catch(()=>{});
+      const tune={go:[440,588],ready:[310],beat:[570],hit:[493,675],perfect:[575,740,908],miss:[212,154],end:[448,568,665,832]}[kind];
+      for(const [step,hz] of tune.entries()){
+        const ping=audio.createOscillator(),gain=audio.createGain(),at=audio.currentTime+step*.045;
+        ping.type=kind==='miss'?'triangle':'sine';ping.frequency.setValueAtTime(hz,at);
+        ping.frequency.setTargetAtTime(hz*.9,at+.045,.05);
+        gain.gain.setValueAtTime(.0001,at);gain.gain.exponentialRampToValueAtTime(kind==='beat'?.08:.14,at+.01);
+        gain.gain.exponentialRampToValueAtTime(.0001,at+.12);
+        ping.connect(gain).connect(audio.destination);ping.start(at);ping.stop(at+.13);
+      }
+    }catch{}
+  }
+  function update(){
+    const current=Math.min(index,questions.length-1),round=Math.floor(current/5);
+    $('round').textContent=rounds[round];
+    $('trust').textContent=trust+' / '+MAX_TRUST;
+    $('score').textContent=score.toLocaleString('en-US');
+    $('best').textContent=best?best.toLocaleString('en-US'):'—';
+    $('mute').textContent=muted?'Sound off':'Sound on';
+    $('mute').setAttribute('aria-pressed',String(!muted));
+    $('pause').disabled=!active();
+    for(const button of buttons)button.disabled=!active()||answered;
+    if(phase!=='menu'){
+      $('counter').textContent=`Question ${current+1} / ${questions.length}${streak>1?' · Streak '+streak:''}`;
+      $('question').textContent=questions[current][0];
+      $('evidence').textContent=questions[current][1];
+    }
+    $('tip').textContent=feedback||'Confirm official facts. Explain context or process. Verify unconfirmed claims.';
+  }
+  function display(next,title,body,label){
+    phase=next;$('overlay').hidden=active();
+    if(active())canvas.focus({preventScroll:true});
+    else{
+      $('headline').textContent=title;$('message').textContent=body;$('start').textContent=label;
+      if(next!=='menu')$('start').focus({preventScroll:true});
+    }
+    update();
+  }
+  function launch(){
+    if(phase==='paused'){display('live');return;}
+    index=0;clock=0;trust=MAX_TRUST;score=0;streak=0;landed=0;perfect=0;answered=false;beatPlayed=false;flash=0;pulse=0;
+    feedback='Wait until the microphone token reaches the yellow target, then pick the response.';
+    feedbackType='';tone('go');display('live');
+  }
+  function pause(){if(active())display('paused','Briefing paused','The next question will resume where you left it.','Resume briefing');}
+  function finish(won){
+    if(score>best){best=score;save('pp-best',score);}
+    const count=`${landed}/${questions.length} on-time, ${perfect} perfect, ${score.toLocaleString('en-US')} points.`;
+    if(won){tone('end');display('won',perfect>=8?'A headline performance':'Briefing complete',count+' The room kept its trust.','Brief again');}
+    else display('lost','The room lost trust',count+' Match both the evidence and the beat.','Try the briefing again');
+  }
+  function resolve(lane){
+    if(!active()||answered)return;
+    const rule=timing(index),right=questions[index][2],error=Math.abs(clock-rule.beat),correct=lane===right;
+    answered=true;pulse=.4;flash=.26;
+    if(correct&&error<=rule.window){
+      landed++;streak++;
+      const clean=error<=.095;
+      perfect+=Number(clean);score+=(clean?235:145)+Math.min(streak-1,7)*18;
+      feedback=(clean?'On the beat. ':'Good timing. ')+answers[right]+' was the right response.';feedbackType='good';
+      tone(clean?'perfect':'hit');
+    }else{
+      trust--;streak=0;
+      feedback=lane<0?'Missed the yellow window. The evidence called for '+answers[right].toLowerCase()+'.':
+        correct?(clock<rule.beat?'Too early. ':'Too late. ')+'Watch the microphone token approach the yellow target.':
+          'The evidence called for '+answers[right].toLowerCase()+'.';
+      feedbackType='bad';tone('miss');
+    }
+    if(trust===0)finish(false);else update();
+  }
+  function tick(dt){
+    clock+=dt;pulse=Math.max(0,pulse-dt);flash=Math.max(0,flash-dt);
+    const rule=timing(index);
+    if(!beatPlayed&&clock>=rule.beat){beatPlayed=true;pulse=.22;tone('beat');}
+    if(!answered&&clock>rule.beat+rule.window)resolve(-1);
+    if(!active()||clock<rule.span)return;
+    index++;
+    if(index>=questions.length){finish(landed>=9);return;}
+    clock=0;answered=false;beatPlayed=false;pulse=0;feedback='';feedbackType='';tone('ready');update();
+  }
+  function box(x,y,w,h,fill,r=0,line=null){
+    ctx.fillStyle=fill;ctx.beginPath();if(r)ctx.roundRect(x,y,w,h,r);else ctx.rect(x,y,w,h);ctx.fill();
+    if(line){ctx.strokeStyle=line;ctx.lineWidth=3;ctx.stroke();}
+  }
+  function disk(x,y,rx,ry,color){
+    ctx.fillStyle=color;ctx.beginPath();ctx.ellipse(x,y,rx,ry,0,0,Math.PI*2);ctx.fill();
+  }
+  function ribbon(points,fill,stroke){
+    ctx.fillStyle=fill;ctx.beginPath();ctx.moveTo(...points[0]);for(const point of points.slice(1))ctx.lineTo(...point);ctx.closePath();ctx.fill();
+    if(stroke){ctx.lineWidth=3;ctx.strokeStyle=stroke;ctx.stroke();}
+  }
+  function label(text,x,y,size,color,align='left'){
+    ctx.font=`900 ${size}px "Trebuchet MS",sans-serif`;ctx.textAlign=align;ctx.fillStyle=color;ctx.fillText(text,x,y);
+  }
+  function person({x,y,skin,hair,jacket,angle=0,mic=false},time,offset=0){
+    const ink='#2c2237',bob=Math.sin(time*3.6+offset)*3.6,blink=Math.sin(time*1.9+offset)>.99;
+    ctx.save();ctx.translate(x,y+bob);ctx.rotate(angle);
+    disk(0,55,65,17,'#301f3d44');
+    box(-45,-3,97,98,jacket,24,ink);
+    box(-17,-17,39,28,skin,5,ink);
+    disk(0,-48,46,46,ink);disk(3,-44,40,36,skin);
+    disk(-36,-39,8,10,skin);disk(40,-36,8,10,skin);
+    ribbon([[-44,-46],[-47,-66],[-32,-94],[-9,-98],[15,-91],[40,-87],[48,-55],[24,-56],[18,-74],[-9,-70],[-31,-57]],hair,ink);
+    disk(-12,-40,4,blink?1:5,ink);disk(16,-40,4,blink?1:5,ink);
+    disk(25,-29,9,5,'#f08b8c');disk(-23,-29,9,5,'#f08b8c');
+    disk(4,-19,mic?6:8,mic?3+Math.sin(time*14)*1.5:3,ink);
+    ribbon([[-15,1],[6,20],[22,1],[12,-4],[-4,-4]],'#f1d7bd',ink);
+    if(mic){
+      box(40,22,34,19,'#f1be97',8,ink);box(53,3,8,33,'#6c6481',4,ink);
+      disk(57,2,11,9,ink);disk(60,-1,5,5,'#746d83');
+    }
+    ctx.restore();
+  }
+  function newsroom(time){
+    const bg=ctx.createLinearGradient(0,0,0,H);bg.addColorStop(0,'#583459');bg.addColorStop(.95,'#c58991');box(0,0,W,H,bg);
+    for(let i=0;i<8;i++){
+      const x=24+i*131;
+      ribbon([[x,0],[x+21,0],[x+87,390],[x-17,390]],i%2?'#e9adb516':'#ffd6af20');
+      box(x+1,0,8,219,'#593957',3);
+    }
+    box(287,18,386,91,'#2e233e',16,'#201c35');
+    box(309,36,342,50,'#795b71',10);
+    disk(355,63,8,8,active()?'#ff807f':'#9cb5c1');
+    label('NORTHWILD PRESS DESK',484,70,23,'#fff0be','center');
+    const beam=ctx.createRadialGradient(480,169,40,480,212,230);beam.addColorStop(0,'#ffdca66f');beam.addColorStop(1,'#ffdca600');
+    box(194,94,565,253,beam);
+    person({x:478,y:225,skin:'#f6c197',hair:'#493046',jacket:'#63a497',mic:true},time,1);
+    box(368,248,229,96,'#514069',13,'#2b2237');box(354,235,256,31,'#ffe0a6',8,'#302644');
+    box(469,289,34,28,'#806890',5);label('✦',486,313,23,'#ffd893','center');
+    person({x:146,y:263,skin:'#da926e',hair:'#413248',jacket:'#b96c7c',angle:.06},time,0);
+    person({x:805,y:264,skin:'#f9c49e',hair:'#7b463d',jacket:'#6e9fc6',angle:-.07},time,3);
+    box(0,337,W,19,'#362944');box(0,349,W,131,'#2d253d');
+    for(const [x,y] of [[201,299],[746,299]]){
+      box(x-24,y-13,49,31,'#6d6986',8,'#302741');
+      disk(x+9,y+2,11,11,'#312942');disk(x+11,y,6,6,'#a8bce7');
+      if(flash>.08)ribbon([[x+8,y-26],[x+22,y-39],[x+21,y-20],[x+39,y-18],[x+22,y-9],[x+32,y+8]],'#ffebbaae');
+    }
+  }
+  function rail(time){
+    const live=active(),rule=timing(index),denominator=rule.beat+.81,span=RIGHT-LEFT;
+    const markerX=LEFT+span*Math.min(1,clock/denominator);
+    const goalX=LEFT+span*rule.beat/denominator;
+    const radius=span*rule.window/denominator;
+    const inside=live&&Math.abs(clock-rule.beat)<=rule.window;
+    label('ON-AIR BEAT',LEFT,385,18,'#f2d8e9');
+    label(inside?'SPEAK NOW':answered?(feedbackType==='good'?'ON TIME':'RESET ON THE NEXT BEAT'):'WAIT FOR THE YELLOW TARGET',
+      RIGHT,383,16,inside?'#ffe58a':'#d4bad2','right');
+    box(LEFT,401,span,39,'#171923',12,'#625068');
+    for(let n=1;n<8;n++)box(LEFT+n*span/8,412,2,16,'#87718b6b',1);
+    box(goalX-radius,397,radius*2,47,inside?'#ffda7a':'#8e6948',10,'#ffd882');
+    box(goalX-2,396,4,49,'#fff0b5',2);
+    if(pulse){disk(goalX,420,33+pulse*74,24+pulse*33,feedbackType==='bad'?'#ff817b36':'#fdf29c33');}
+    const x=phase==='menu'?LEFT+52+Math.sin(time*3)*18:markerX;
+    const tint=answered?(feedbackType==='good'?colors[0]:'#ff8d83'):'#ede2f8';
+    disk(x,421,15,15,'#29233d');disk(x,421,12,12,tint);
+    box(x-3,412,6,11,'#463b5c',3);box(x-1,420,2,8,'#463b5c',2);box(x-5,427,10,2,'#463b5c',2);
+  }
+  function frame(ms){
+    const delta=lastFrame?Math.min((ms-lastFrame)/1000,.068):0;
+    lastFrame=ms;
+    if(phase!=='paused')artTime+=delta;
+    if(active())tick(delta);
+    newsroom(artTime);rail(artTime);requestAnimationFrame(frame);
+  }
+  for(const button of buttons)button.addEventListener('click',()=>resolve(Number(button.dataset.lane)));
+  $('start').addEventListener('click',launch);$('pause').addEventListener('click',pause);
+  $('mute').addEventListener('click',()=>{muted=!muted;save('pp-muted',Number(muted));if(!muted)tone('go');update();});
+  document.addEventListener('keydown',event=>{
+    if(event.code==='Escape'){if(active())pause();else if(phase==='paused')launch();return;}
+    if(!active()||event.repeat)return;
+    const lane={Digit1:0,Digit2:1,Digit3:2,KeyA:0,KeyS:1,KeyD:2}[event.code];
+    if(lane!==undefined){event.preventDefault();resolve(lane);}
+  });
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)pause();});
+  if(new URLSearchParams(location.search).has('qa'))window.pressroomQA=()=>({
+    phase,index,clock,trust,score,landed,perfect,answered,beat:timing(index).beat,window:timing(index).window,expected:questions[index]?.[2],
+  });
+  update();requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

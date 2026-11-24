@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f4e8ce">
+<title>Boardroom Blitz</title>
+<meta name="description" content="Swap seats, change the motion, and win a boardroom comeback in one 75-second vote.">
+<style>
+:root{color-scheme:light;--ink:#1b2b32;--paper:#f7edd9;--white:#fff8e9;--red:#c24738;--teal:#326f63;--yellow:#f5bd46;--line:#2d3c40;--muted:#635947;font:16px/1.35 "Trebuchet MS",system-ui,sans-serif;background:var(--paper);color:var(--ink)}
+*{box-sizing:border-box}body{margin:0;min-width:284px;background:radial-gradient(#7c6d4b22 1px,transparent 1px) 0 0/15px 15px,var(--paper)}button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}button:focus-visible,summary:focus-visible{outline:3px solid #225fb4;outline-offset:3px}button:disabled{cursor:default}button:active:not(:disabled){transform:translate(2px,2px);box-shadow:none}button,[data-stage="running"] .seat{transition:background .13s,box-shadow .13s,transform .13s}button[hidden],section[hidden],div[hidden],p[hidden]{display:none!important}
+.shell{width:min(1160px,100% - 36px);margin:auto;padding:24px 0 28px}.mast{display:flex;justify-content:space-between;align-items:center;gap:14px;border-bottom:2px solid var(--ink);padding-bottom:11px}.brand{display:flex;align-items:center;gap:10px;font-weight:970;letter-spacing:.02em}.logo{position:relative;width:34px;height:31px;background:var(--yellow);border:2px solid var(--ink);border-radius:8px 8px 8px 2px;box-shadow:3px 3px 0 var(--ink);display:grid;place-items:center;font-weight:1000}.utility{display:flex;align-items:center;gap:7px}.small,.pill{border:2px solid var(--ink);background:var(--white);border-radius:9px;padding:6px 10px;font-size:.78rem;font-weight:900;min-height:35px}.small:hover{background:#ffe8a3}.clock{background:var(--ink);color:var(--white);font-variant-numeric:tabular-nums;min-width:57px;text-align:center}.clock.late{background:#943324;color:#fff}.grid{display:grid;grid-template-columns:minmax(0,1.58fr) minmax(280px,.94fr);gap:18px;margin-top:16px;align-items:start}
+.chamber{position:relative;isolation:isolate;overflow:hidden;border:2px solid var(--ink);border-radius:19px;background:linear-gradient(146deg,#fbd881 0 30%,#efb756 85%);box-shadow:5px 5px 0 var(--line)}
+.chamber:before,.chamber:after{content:"";position:absolute;pointer-events:none;inset:0;z-index:-1}.chamber:before{background:repeating-linear-gradient(116deg,transparent 0 67px,#41321c19 68px 70px),linear-gradient(#fff0 84%,#4d3a1b23 84%);opacity:.75}.chamber:after{background:radial-gradient(ellipse at 50% 58%,#744c245a,transparent 58%);inset:25% 0 0}
+.room-head{position:absolute;z-index:2;top:13px;left:13px;display:flex;align-items:center;gap:7px;font-size:.67rem;font-weight:1000;letter-spacing:.105em}.room-head b{background:var(--ink);color:var(--white);padding:5px 8px;border-radius:5px}.table-wrap{position:relative;width:100%;height:clamp(390px,45vw,505px)}.table{position:absolute;left:50%;top:53%;width:63%;height:47%;transform:translate(-50%,-50%) rotate(-9deg);border:3px solid var(--ink);border-radius:50%;background:radial-gradient(ellipse at 56% 41%,#4d8270,#285247 72%);box-shadow:inset 0 0 0 8px #84a990,inset 0 0 0 10px #192c2b,0 18px 0 -4px #513522,0 19px 0 1px #222f32;display:grid;place-items:center}
+.table-mark{color:#fff3cb;transform:rotate(9deg);font-weight:1000;letter-spacing:.2em;font-size:clamp(10px,1.6vw,17px);text-align:center;opacity:.85}.table-mark:before{content:"";display:block;width:50px;height:37px;margin:0 auto 7px;border:2px solid #fff3cb;border-radius:9px;background:linear-gradient(90deg,transparent 23%,#fff3cb 23% 28%,transparent 28% 44%,#fff3cb 44% 49%,transparent 49% 66%,#fff3cb 66% 71%,transparent 71%);clip-path:polygon(0 0,98% 0,100% 84%,82% 100%,0 100%)}
+.seats{position:absolute;inset:0}.seat{position:absolute;left:var(--x);top:var(--y);z-index:2;transform:translate(-50%,-50%);width:clamp(66px,17%,108px);min-height:76px;padding:4px 4px 6px;display:grid;justify-items:center;grid-template-rows:1fr auto auto;gap:3px;border:2px solid var(--ink);border-radius:15px;background:#fff5db;box-shadow:3px 4px 0 #273b3d;text-align:center}.seat:active:not(:disabled){transform:translate(calc(-50% + 2px),calc(-50% + 2px))}.seat:disabled{opacity:1}.seat[data-selected="true"]{outline:4px solid #fff6dd;box-shadow:0 0 0 7px var(--ink);background:#ffe081}.seat[data-pass="true"]{background:#e0edca}.seat-name{font-size:.72rem;font-weight:1000;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.seat-key{position:absolute;top:4px;left:5px;font-size:.66rem;font-family:monospace;font-weight:900;opacity:.73}.vote-tag{font-size:.59rem;line-height:1.1;font-weight:1000;text-transform:uppercase;letter-spacing:.02em;background:#f2d1b8;color:#782e20;padding:2px 4px;border-radius:4px;min-width:37px}.seat[data-pass="true"] .vote-tag{background:#2f6353;color:#fff}
+.face{position:relative;width:38px;height:37px;margin:1px 0 0;background:var(--skin);border:2px solid var(--ink);border-radius:48% 47% 43% 43%;box-shadow:inset -3px -3px 0 #273b3d24;transform:rotate(var(--tilt,0deg));overflow:hidden}.face:before{content:"";position:absolute;top:1px;left:-2px;width:38px;height:13px;background:var(--hair);border-radius:55% 43% 60% 22%;transform:rotate(-9deg)}.face:after{content:"";position:absolute;top:17px;left:9px;width:4px;height:4px;border-radius:50%;background:#1b2528;box-shadow:12px 0 #1b2528}.mouth{position:absolute;z-index:1;bottom:5px;left:12px;width:10px;height:5px;border-radius:0 0 9px 9px;border-bottom:2px solid #2b2823}.seat[data-pass="true"] .mouth{background:#2b2823}.cup{position:absolute;left:var(--x);top:var(--y);width:20px;height:16px;border:2px solid var(--ink);border-right-width:4px;border-radius:3px 3px 8px 6px;background:#fff6d9;transform:rotate(var(--r));opacity:.94}.memo-art{position:absolute;left:49%;top:76%;width:45px;height:30px;background:#fff9e1;border:2px solid var(--ink);transform:rotate(-14deg);border-radius:3px}.memo-art:after{content:"";position:absolute;inset:5px 8px;background:repeating-linear-gradient(#62877a 0 2px,transparent 2px 6px)}
+.meter{display:flex;justify-content:space-between;align-items:center;gap:10px;border-top:2px solid var(--ink);background:var(--white);padding:10px 13px;font-size:.82rem;font-weight:900}.meter strong{font-variant-numeric:tabular-nums}.ballots{display:flex;gap:5px;align-items:center}.ballots i{display:block;width:12px;height:10px;border:1.8px solid var(--ink);border-radius:3px;background:#f3e5c6}.ballots i.done{background:#3b7b61}.ballots i.now{background:var(--yellow)}.side{background:var(--white);border:2px solid var(--ink);border-radius:17px;box-shadow:5px 5px 0 var(--line);padding:19px}
+h1,h2,p{margin:0}h1{font-weight:1000;letter-spacing:-.07em;font-size:clamp(3rem,5vw,5.1rem);line-height:.86;text-transform:uppercase}.kicker{font-size:.72rem;font-weight:1000;color:#775028;text-transform:uppercase;letter-spacing:.12em;margin-bottom:8px}.lead{font-size:1rem;font-weight:740;max-width:32ch;margin-top:17px}.intro-steps{padding:0;list-style:none;display:grid;gap:7px;margin:15px 0;font-size:.83rem}.intro-steps li{display:flex;gap:8px;align-items:center}.intro-steps b{display:grid;place-items:center;min-width:23px;height:23px;border:2px solid var(--ink);border-radius:6px;background:#f3c65a;font-size:.74rem}.primary{width:100%;min-height:46px;border:2px solid var(--ink);border-radius:9px;background:var(--yellow);box-shadow:3px 3px 0 var(--ink);text-align:center;font-weight:1000;padding:9px 11px}.primary:hover{background:#ffd36c}.foot{margin-top:13px;color:var(--muted);font-size:.74rem;font-weight:800}
+h2{font-size:clamp(1.4rem,2.8vw,2rem);font-weight:1000;line-height:1.02;letter-spacing:-.045em}.notice{min-height:38px;margin-top:8px;color:#644529;font-size:.8rem;font-weight:800}.motions{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:11px 0}.motion{min-height:36px;background:#f4e5c7;border:1.8px solid var(--ink);border-radius:7px;font-weight:900;font-size:.77rem;padding:4px 3px}.motion[aria-pressed="true"]{background:#dcebc6;box-shadow:2px 2px 0 var(--teal)}.whip{list-style:none;padding:0;margin:11px 0;display:grid;gap:5px}.whip li{display:grid;grid-template-columns:44px minmax(0,1fr);gap:6px;border-bottom:1px solid #d5c6a9;padding-bottom:4px;font-size:.72rem}.whip b{color:#96462e}.whip .good b{color:#2d604b}.hint{min-height:18px;margin:0 0 8px;color:#635947;font-size:.72rem;line-height:1.25}.cast{background:#f7c14d}.cast.ready{background:#b8dc9e}.buttons{display:flex;gap:9px;margin-top:13px}.buttons .small{flex:1}.result-score{font-size:2.6rem;font-weight:1000;line-height:1.1;margin:15px 0 7px}.footnote{margin:12px 0 0;font-size:.72rem;color:#675e49}details{border-top:1px solid #c8b79b;margin-top:12px;padding-top:8px;font-size:.77rem;color:var(--muted)}summary{cursor:pointer;font-weight:900}
+@media(max-width:740px){.shell{width:calc(100% - 25px);padding:12px 0 20px}.grid{grid-template-columns:minmax(0,1fr);gap:12px;margin-top:12px}.mast{padding-bottom:8px}.table-wrap{height:clamp(248px,69vw,390px)}.table{height:43%;top:54%}.seat{min-height:67px;width:clamp(52px,15%,84px);border-radius:11px}.face{width:32px;height:30px;margin:0}.face:before{width:31px;height:10px}.face:after{left:7px;top:13px;box-shadow:10px 0 #1b2528}.mouth{bottom:3px;left:10px;width:9px}.seat-name{font-size:.64rem}.side{padding:13px}.room-head{font-size:.56rem;top:8px;left:8px}.meter{padding:7px 9px;font-size:.72rem}.chamber,.side{box-shadow:3px 3px 0 var(--line)}h1{font-size:clamp(2.35rem,10vw,4rem)}.lead{margin-top:11px}.intro-steps{margin:9px 0}.whip{display:none}.notice{min-height:0}.side p{font-size:.82rem}.table-mark:before{width:30px;height:22px}}@media(max-width:370px){.table-wrap{height:244px}.vote-tag{font-size:.5rem;min-width:30px}.seat{width:49px}.cup{display:none}.brand{font-size:.89rem}.small{padding:5px 8px}}@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body><main class="shell" id="app" data-stage="menu">
+<header class="mast"><div class="brand"><span class="logo" aria-hidden="true">✓</span> Boardroom Blitz</div><div class="utility"><button type="button" class="small" id="sound" aria-pressed="true">Sound on</button><button type="button" class="small" id="pause" hidden>Pause</button><output class="pill clock" id="clock" aria-label="Seconds left">75s</output></div></header>
+<div class="grid">
+<section class="chamber" aria-label="Boardroom seating">
+<div class="room-head"><b>QUILL CIRCUITS</b><span>BOARD CHAMBER</span></div>
+<div class="table-wrap">
+<div class="table" aria-hidden="true"><div class="table-mark">QUILL</div></div>
+<i class="cup" aria-hidden="true" style="--x:32%;--y:45%;--r:-13deg"></i><i class="cup" aria-hidden="true" style="--x:62%;--y:39%;--r:18deg"></i>
+<i class="memo-art" aria-hidden="true"></i><div class="seats" id="seats"></div></div>
+<div class="meter"><span id="count">Vote preview <strong>—</strong></span><div id="ballots" class="ballots" aria-label="Three ballots"><i></i><i></i><i></i></div><span id="strikes">3 challenges left</span></div></section>
+<section class="side" id="intro">
+<div class="kicker">The comeback vote</div><h1>Boardroom<br>Blitz</h1>
+<p class="lead">Build a comeback coalition in three ballots before the clock hits zero.</p>
+<ol class="intro-steps"><li><b>1</b> Tap two seats to swap directors.</li><li><b>2</b> Pick a motion and read each director’s vote.</li><li><b>3</b> Reach the target, then cast your ballot.</li></ol>
+<button type="button" class="primary" id="start">Start the vote</button><p class="foot" id="best">Best score: —</p>
+<details><summary>Keyboard controls</summary><p>1–6 selects seats. A, S, D sets the motion. Enter casts. Esc pauses. M toggles sound.</p></details>
+</section>
+<section class="side" id="play" hidden>
+<div class="kicker" id="ballot-number"></div><h2 id="round-title"></h2><p class="notice" id="round-rule"></p>
+<div class="motions" id="motions" aria-label="Proposed motion"></div><p class="hint">PREVIEW · Tap a director twice to clear your selection.</p>
+<ol class="whip" id="whip" aria-label="Director requirements"></ol>
+<p id="selected-help" class="hint" aria-live="polite"></p><button type="button" class="primary cast" id="cast">Cast ballot</button>
+<p class="foot" id="feedback" aria-live="polite"></p>
+</section>
+<section class="side" id="paused" hidden><div class="kicker">Clock stopped</div><h2>In recess</h2><p class="lead">Your seats and votes are held until the meeting resumes.</p><button type="button" class="primary" id="resume" style="margin-top:15px">Resume the vote</button></section>
+<section class="side" id="result" hidden><div class="kicker" id="result-kicker"></div><h2 id="result-title"></h2><p class="result-score" id="score"></p><p class="lead" id="result-detail"></p><div class="buttons"><button type="button" class="primary" id="retry">New meeting</button><button type="button" class="small" id="home">Title</button></div></section>
+</div>
+<p class="footnote">Quill Circuits and its directors are fictional. Best score stays on this device.</p>
+</main>
+<script>
+'use strict';
+const byId = id => document.getElementById(id);
+const app = byId('app');
+const motions = ['Build', 'Ship', 'Trust'];
+const directors = [
+  {name:'Kit', skin:'#e99c66', hair:'#342b3d', tilt:'-7deg', rule:'Sits next to Mina.'},
+  {name:'Mina', skin:'#a86846', hair:'#1b3037', tilt:'5deg', rule:'Build motion or seat 1.'},
+  {name:'Otis', skin:'#f0b86b', hair:'#57565e', tilt:'-8deg', rule:'Sits opposite Rue.'},
+  {name:'Rue', skin:'#c98771', hair:'#b35035', tilt:'4deg', rule:'Trust motion or opposite Kit.'},
+  {name:'Ivo', skin:'#f5d08f', hair:'#64783b', tilt:'-4deg', rule:'Does not sit next to Juno.'},
+  {name:'Juno', skin:'#97594a', hair:'#303746', tilt:'7deg', rule:'Ship motion or next to Ivo.'},
+];
+const rules = [
+  {title:'Open the meeting', target:4, description:'Each director gets one vote. Four yes votes pass.'},
+  {title:'Observer at the head', target:4, description:'Seat 1 observes and cannot vote. Four yes votes still pass.'},
+  {title:'The casting seat', target:5, description:'Seat 4 now carries two votes. Five yes votes bring the chair back.'},
+];
+const locations = [[27,26],[66,22],[87,48],[72,78],[33,81],[13,58]];
+const fresh = [0,1,2,3,4,5];
+const storageKey = 'quill.boardroom-blitz.v1';
+let audio;
+let state = 'menu';
+let sound = true;
+let best = 0;
+let endTime = 0, leftMs = 75000, round = 0, misses = 0, moves = 0, selected = -1, proposal = 0;
+let seats = [...fresh];
+let feedback = '';
+try {
+  const data = JSON.parse(localStorage.getItem(storageKey) || '{}');
+  best = Number.isFinite(data.best) && data.best >= 0 ? Math.floor(data.best) : 0;
+  sound = data.sound !== false;
+} catch {}
+const persist = () => { try {localStorage.setItem(storageKey, JSON.stringify({best,sound}));} catch {} };
+
+function beep(notes) {
+  if (!sound) return;
+  try {
+    audio ??= new (window.AudioContext || window.webkitAudioContext)();
+    if (audio.state === 'suspended') audio.resume().catch(() => {});
+    for (const [offset, freq, duration] of notes) {
+      const time = audio.currentTime + offset;
+      const oscillator = audio.createOscillator();
+      const gain = audio.createGain();
+      oscillator.type = 'triangle'; oscillator.frequency.value = freq;
+      gain.gain.setValueAtTime(.055,time);
+      gain.gain.exponentialRampToValueAtTime(.001,time+duration);
+      oscillator.connect(gain); gain.connect(audio.destination);
+      oscillator.start(time); oscillator.stop(time+duration);
+    }
+  } catch {}
+}
+const selectSound = [[0,520,.09]], swapSound = [[0,350,.08],[.055,560,.12]], winSound = [[0,440,.18],[.085,550,.18],[.17,660,.22]], failSound = [[0,190,.13],[.075,125,.23]];
+
+function chooseVotes() {
+  const positions = [];
+  seats.forEach((id,index) => { positions[id] = index; });
+  const distance = (a,b) => Math.abs(positions[a] - positions[b]);
+  const near = (a,b) => distance(a,b) === 1 || distance(a,b) === 5;
+  const yes = [near(0,1), proposal === 0 || positions[1] === 0, distance(2,3) === 3,
+    proposal === 2 || distance(3,0) === 3, !near(4,5), proposal === 1 || near(4,5)];
+  return seats.map((id,index) => ({id, yes:yes[id], weight:round===1&&index===0?0:round===2&&index===3?2:1}));
+}
+
+function deal() {
+  selected = -1;
+  for (let attempt=0; attempt<30; attempt++) {
+    seats = [...fresh];
+    for (let i=5; i>0; i--) {
+      const j = Math.floor(Math.random()*(i+1));
+      [seats[i],seats[j]] = [seats[j],seats[i]];
+    }
+    proposal = round%3;
+    if (chooseVotes().reduce((sum,v)=>sum+(v.yes?v.weight:0),0) < rules[round].target) return;
+  }
+  seats=[0,2,4,1,3,5];
+}
+
+const seatButtons = directors.map((_,index) => {
+  const node = document.createElement('button');
+  node.type = 'button';
+  node.className = 'seat';
+  node.style.setProperty('--x', locations[index][0]+'%');
+  node.style.setProperty('--y', locations[index][1]+'%');
+  node.innerHTML = '<span class="seat-key">'+(index+1)+'</span><span class="face" aria-hidden="true"><span class="mouth"></span></span><span class="seat-name"></span><span class="vote-tag"></span>';
+  node.addEventListener('click', () => pickSeat(index));
+  byId('seats').append(node);
+  return node;
+});
+const motionButtons = motions.map((motion,index) => {
+  const node = document.createElement('button'); node.type='button'; node.className='motion';
+  node.textContent=motion; node.setAttribute('aria-keyshortcuts',['A','S','D'][index]);
+  node.addEventListener('click',()=>pickMotion(index));
+  byId('motions').append(node);
+  return node;
+});
+const whipRows = fresh.map(() => {
+  const node=document.createElement('li');
+  node.innerHTML='<b></b><span></span>';
+  byId('whip').append(node);
+  return node;
+});
+
+function timing() {
+  const seconds = Math.ceil(Math.max(0,leftMs)/1000);
+  const clock = byId('clock');
+  clock.value = seconds+'s';
+  clock.classList.toggle('late', seconds<=12);
+}
+
+function render() {
+  app.dataset.stage = state;
+  for(const [pane,show] of Object.entries({intro:state==='menu',play:state==='running',paused:state==='paused',result:state==='result'})) byId(pane).hidden = !show;
+  byId('pause').hidden = state!=='running';
+  byId('best').textContent = best ? 'Best score: '+best.toLocaleString('en-US') : 'Best score: —';
+  byId('sound').textContent='Sound '+(sound?'on':'off');
+  byId('sound').setAttribute('aria-pressed',String(sound));
+  timing();
+  const votes = chooseVotes();
+  const active = state!=='menu';
+  const yes = votes.reduce((sum,v)=>sum+(v.yes?v.weight:0),0);
+  const rule=rules[Math.min(round,rules.length-1)];
+  byId('count').textContent = active ? 'Vote preview '+yes+' / '+rule.target : 'Vote preview —';
+  byId('strikes').textContent= (3-misses)+' challenge'+(3-misses===1?'':'s')+' left';
+  Array.from(byId('ballots').children).forEach((pip,i)=>{pip.className=i<round?'done':active&&i===round?'now':'';});
+  seatButtons.forEach((button,index)=>{
+    const vote=votes[index], director=directors[vote.id];
+    const face=button.querySelector('.face');
+    for(const property of ['skin','hair','tilt']) face.style.setProperty('--'+property,director[property]);
+    button.querySelector('.seat-name').textContent=director.name;
+    button.querySelector('.vote-tag').textContent=active?(vote.weight===0?'Observe':vote.yes?'Yes '+vote.weight:'No'):'·';
+    button.dataset.selected=String(selected===index);
+    button.dataset.pass=String(active&&vote.yes&&vote.weight>0);
+    button.disabled=state!=='running';
+    button.setAttribute('aria-label','Seat '+(index+1)+', '+director.name+'. '+director.rule+' '+(vote.weight===0?'Observer.':vote.yes?'Yes, '+vote.weight+' vote.':'No.'));
+    button.setAttribute('aria-pressed',String(selected===index));
+  });
+  byId('ballot-number').textContent = 'Ballot '+Math.min(round+1,3)+' of 3';
+  byId('round-title').textContent=rule.title;
+  byId('round-rule').textContent=rule.description;
+  byId('selected-help').textContent=selected>=0 ? directors[seats[selected]].name+': '+directors[seats[selected]].rule+' Choose another seat to swap.' : 'Select a director to see their voting condition.';
+  byId('feedback').textContent=feedback;
+  byId('cast').classList.toggle('ready',yes>=rule.target);
+  motionButtons.forEach((node,index)=>node.setAttribute('aria-pressed',String(index===proposal)));
+  whipRows.forEach((row,index)=>{
+    const vote=votes[index], director=directors[vote.id];
+    row.classList.toggle('good',vote.yes&&vote.weight>0);
+    row.firstElementChild.textContent=director.name;
+    row.lastElementChild.textContent=director.rule;
+  });
+}
+
+function pickSeat(index) {
+  if (state!=='running') return;
+  if (selected<0) { selected=index; beep(selectSound); }
+  else {
+    if (selected!==index) {
+      [seats[selected],seats[index]]=[seats[index],seats[selected]];
+      moves++; beep(swapSound);
+    }
+    selected=-1;
+  }
+  render();
+}
+function pickMotion(index) {
+  if (state!=='running'||proposal===index) return;
+  proposal=index; beep(selectSound); render();
+}
+function begin() {
+  round=0; misses=0; moves=0; leftMs=75000; feedback='';
+  deal();
+  state='running';
+  endTime=performance.now()+leftMs;
+  beep(swapSound); render();
+  seatButtons[0].focus({preventScroll:true});
+}
+function finish(won, reason) {
+  leftMs=Math.max(0,endTime-performance.now());
+  state='result';
+  const score=Math.max(0, round*500 + Math.floor(leftMs/1000)*12 + (3-misses)*75 - moves*8);
+  const freshBest=won&&score>best;
+  if (freshBest) {best=score; persist();}
+  byId('result-kicker').textContent=won?(freshBest?'New best score':'Motion carried'):'Meeting adjourned';
+  byId('result-title').textContent=won?'Comeback approved!':'The vote fell short';
+  byId('score').textContent=score.toLocaleString('en-US')+' pts';
+  byId('result-detail').textContent=won?'Three motions passed with '+Math.ceil(leftMs/1000)+'s left.':reason;
+  beep(won?winSound:failSound);
+  render();
+  byId('retry').focus({preventScroll:true});
+}
+function cast() {
+  if (state!=='running') return;
+  if (performance.now()>=endTime) { finish(false,'The chamber ran out of time.'); return; }
+  const yes=chooseVotes().reduce((sum,v)=>sum+(v.yes?v.weight:0),0);
+  if(yes<rules[round].target){
+    misses++;
+    if(misses===3){finish(false,'Three challenged ballots ended the meeting.');return;}
+    feedback='Motion challenged. Rearrange the seats or change the motion.';
+    beep(failSound); render(); return;
+  }
+  round++;
+  if(round===rules.length){finish(true);return;}
+  feedback='Motion passed. The next rule is now in play.';
+  deal();
+  beep(winSound); render();
+}
+function pause() {
+  if(state!=='running')return;
+  leftMs=Math.max(0,endTime-performance.now());
+  state='paused'; render(); byId('resume').focus({preventScroll:true});
+}
+function resume() {
+  if(state!=='paused')return;
+  state='running'; endTime=performance.now()+leftMs; render();
+}
+function toggleSound() {
+  sound=!sound; persist(); if(sound)beep(selectSound); render();
+}
+function tick() {
+  if(state==='running'){
+    leftMs=Math.max(0,endTime-performance.now());
+    if(!leftMs)finish(false,'The chamber ran out of time.'); else timing();
+  }
+  requestAnimationFrame(tick);
+}
+byId('start').onclick=begin; byId('retry').onclick=begin; byId('cast').onclick=cast; byId('pause').onclick=pause;
+byId('resume').onclick=resume; byId('sound').onclick=toggleSound;
+byId('home').onclick=()=>{state='menu'; leftMs=75000; round=0; misses=0; selected=-1; render(); byId('start').focus();};
+window.addEventListener('keydown',event=>{
+  if(event.repeat||event.ctrlKey||event.metaKey||event.altKey)return;
+  if(event.code==='KeyM'){event.preventDefault();toggleSound();return;}
+  if(event.code==='Escape'&&(state==='running'||state==='paused')){event.preventDefault();state==='running'?pause():resume();return;}
+  if(state!=='running')return;
+  const seat=/^Digit([1-6])$/.exec(event.code);
+  const motion=['KeyA','KeyS','KeyD'].indexOf(event.code);
+  if(seat||motion>=0||event.code==='Enter'){
+    event.preventDefault();
+    if(seat)pickSeat(Number(seat[1])-1); else if(motion>=0)pickMotion(motion); else cast();
+  }
+});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)pause();});
+render(); tick();
+</script>
+</body></html>

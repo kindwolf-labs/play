@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#142c2c">
+<title>Interim Shift</title>
+<meta name="description" content="Run a cartoon chip fab for one frantic shift. Route orders, vent heat, and hand over a healthy factory.">
+<style>
+:root{color-scheme:dark;--bg:#162b2b;--dark:#183f38;--ink:#1a2c2a;--paper:#f8f2d9;--cream:#f3ebce;--panel:#e2edc7;--mint:#9ae5c3;--orange:#ff8753;--gold:#ffd47b;--line:#2c4c42;--danger:#b34436;font:16px/1.35 "Trebuchet MS",system-ui,sans-serif;color:var(--cream);background:var(--bg)}
+*{box-sizing:border-box}body{min-width:284px;margin:0;background:radial-gradient(#69ac9a2b 1px,transparent 1px) 0 0/18px 18px,var(--bg)}button{font:inherit;color:inherit;cursor:pointer;touch-action:manipulation}button:disabled{cursor:default}button:focus-visible,summary:focus-visible{outline:3px solid #ffba42;outline-offset:3px}[hidden]{display:none!important}button:active:not(:disabled){transform:translate(2px,2px);box-shadow:none}
+.shell{width:min(1190px,100% - 36px);margin:0 auto;padding:21px 0 27px}.top{display:flex;justify-content:space-between;align-items:center;gap:10px;padding-bottom:10px;border-bottom:2px solid #79aa92}.brand{display:flex;align-items:center;gap:10px;font-weight:1000}.brand-mark{width:34px;height:31px;border:2px solid #bde7b4;border-radius:9px;display:grid;place-items:center;background:#254e40;color:#fbc570;box-shadow:3px 3px 0 #081c19;font-size:1.1rem}.top-right,.top-buttons{display:flex;align-items:center;gap:7px}.button-min,.clock{border:1px solid #9ac1a3;background:#213e34;color:#e4f2d3;border-radius:7px;font-size:.78rem;font-weight:900;min-height:35px;padding:6px 10px}.button-min:hover{background:#31584b}.clock{min-width:50px;text-align:center;font-variant-numeric:tabular-nums;padding-top:8px}.late{background:#963e33;color:#fff7d8;border-color:#f2ac7d}
+.layout{display:grid;grid-template-columns:minmax(0,1.62fr) minmax(260px,.94fr);gap:15px;margin-top:15px;align-items:start}.factory{border-radius:15px;overflow:hidden;background:#244d40;border:2px solid #a1c095;box-shadow:5px 5px 0 #0a1e17}.factory-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 12px;background:#285246;border-bottom:1px solid #86a588;font-size:.68rem;font-weight:1000;letter-spacing:.09em;text-transform:uppercase}.power-tag{background:#bce5a8;border-radius:4px;color:#143b2a;padding:3px 6px}.power-tag.alert{background:#ff985e;color:#40211b}
+.bays{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;padding:12px;background:repeating-linear-gradient(0deg,#173d36 0 19px,#224b40 20px 21px)}.bay-shell{border:2px solid #16302c;border-radius:12px;background:#f2e9c7;color:var(--ink);overflow:hidden;box-shadow:3px 4px 0 #102e25}.bay-title{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 9px 0;font-size:.72rem;font-weight:1000;text-transform:uppercase;letter-spacing:.04em}.bay-title kbd,.order-key{border:1px solid #4b6853;padding:1px 3px;border-radius:4px;font:700 .69rem monospace;background:#fff8dd}.machine{position:relative;height:clamp(111px,21vw,190px);overflow:hidden}.machine:before{content:"";position:absolute;left:11%;right:11%;bottom:17%;height:19%;background:#66807680;border-radius:50%;filter:blur(5px)}.robot{position:absolute;left:50%;top:46%;width:clamp(71px,54%,150px);height:70%;transform:translate(-50%,-50%);border:3px solid #223a32;background:var(--machine,#a0daca);border-radius:25% 25% 19% 19%;box-shadow:inset -8px -8px 0 #224f411c,0 7px 0 #234635}.robot:before,.robot:after{content:"";position:absolute;top:16%;width:13%;height:50%;border:2px solid #223a32;background:var(--arm,#4d8a78);border-radius:4px}.robot:before{left:-13%;rotate:-5deg}.robot:after{right:-13%;rotate:5deg}.eye-panel{position:absolute;inset:13% 12% 39%;background:#273c33;border:2px solid #223a32;border-radius:12px;box-shadow:inset 0 0 0 3px #7e9d8157}.eye-panel:before{content:"";position:absolute;left:28%;top:32%;width:13%;height:42%;background:#c1ef86;border-radius:4px;box-shadow:18px 0 #c1ef86}.bay-shell.busy .eye-panel:before{animation:blink 1.2s linear infinite}.mouth{position:absolute;left:32%;right:32%;bottom:18%;height:11%;background:#263c32;border-radius:1px 1px 10px 10px}.antenna{position:absolute;left:47%;top:-17%;width:6%;height:17%;border-radius:5px;background:#2a4638}.antenna:before{content:"";position:absolute;top:-37%;left:-60%;width:220%;aspect-ratio:1;background:#ff9d5d;border:2px solid #223a32;border-radius:50%}.chip{position:absolute;left:50%;bottom:7%;width:24%;max-width:56px;aspect-ratio:1.45;transform:translateX(-50%) rotate(-8deg);border:2px solid #294535;background:#e7b359;border-radius:5px;box-shadow:3px 3px 0 #315142}.chip:after{content:"";position:absolute;inset:18%;border-radius:3px;background:repeating-linear-gradient(90deg,#153d37 0 3px,#79af8c 3px 6px)}.bay-shell.busy .chip{animation:scan 1.3s ease-in-out infinite}.bay-shell.done{animation:clear .55s ease-out}.bay-action{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px;width:100%;min-height:53px;text-align:left;padding:8px 10px;background:#d4e8ad;border:0;border-top:2px solid #284938;color:#152f29;font-size:.76rem;font-weight:950}.bay-action.ready:hover{background:#e2f5b6}.bay-action:disabled{opacity:1;background:#e6e7ce}.bay-action.mismatch{background:#f5c48a}.bay-action span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.bay-progress{grid-column:1/-1;height:5px;border-radius:4px;background:#899a795d;overflow:hidden}.bay-progress i,.track i{display:block;width:0;height:100%;background:#437369;border-radius:4px;transition:width .12s linear}.bay-shell.busy .bay-progress i{background:#3b8e6e}.factory[data-hot="true"] .robot{box-shadow:inset -8px -8px 0 #b74b3c55,0 7px 0 #713d2c}
+.dispatch{border-top:2px solid #14392b;padding:9px 11px;background:#31584a}.dispatch-head{display:flex;justify-content:space-between;align-items:center;gap:6px;font-size:.75rem;font-weight:900}.orders{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:8px}.order{min-width:0;min-height:72px;text-align:left;background:#e7efca;color:#163a33;border:2px solid #203e33;border-radius:8px;box-shadow:2px 3px 0 #133024;padding:5px 6px;font-size:.75rem;font-weight:950;display:grid;gap:3px}.order.empty{background:#29483d;border-color:#708875;color:#c4d4a3;box-shadow:none;font-weight:650}.order[data-selected="true"]{background:#ffdc82;outline:2px solid #fff1b9}.order[data-urgent="true"]{border-color:#9e4434;color:#812f23}.order b,.order span{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.order small{font-size:.62rem;opacity:.76}.order-time{font-variant-numeric:tabular-nums}
+.side{background:var(--paper);color:var(--ink);border:2px solid #acc49c;border-radius:14px;box-shadow:4px 4px 0 #0a2418;padding:17px}.kicker{font-size:.7rem;font-weight:1000;letter-spacing:.12em;text-transform:uppercase;color:#426c4f;margin-bottom:7px}h1,h2,p{margin:0}h1{font-size:clamp(3rem,5.2vw,5.35rem);font-weight:1000;letter-spacing:-.09em;line-height:.83;text-transform:uppercase}h2{font-size:clamp(1.6rem,3.4vw,2.25rem);font-weight:1000;letter-spacing:-.06em;line-height:1}.lead{margin:12px 0 0;font-size:.94rem;font-weight:750;max-width:32ch}.instructions{padding-left:19px;display:grid;gap:5px;margin:15px 0;font-size:.8rem;font-weight:760}.primary{min-height:45px;width:100%;background:#ffaf72;border:2px solid #274737;border-radius:8px;box-shadow:3px 3px 0 #274737;color:var(--ink);padding:8px 10px;font-weight:1000}.primary:hover{background:#fac787}.primary:disabled{background:#d7d5b7;box-shadow:none}.side-foot{margin-top:10px;font-size:.72rem;color:#5b6248;font-weight:800}.panel{padding:9px 0;border-bottom:1px solid #b6be9b}.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}.stats b{display:block;margin-top:1px;font-size:1.42rem;font-variant-numeric:tabular-nums}.stats small,.panel-label{font-size:.72rem;font-weight:900;color:#53624c}.stats .strikes{letter-spacing:.07em;color:#8d352a}.track{margin:5px 0 7px;height:8px;border:1px solid #526a51;background:#d6e1ba;border-radius:8px;overflow:hidden}.track i{background:#4e8c68}.track.heat i{background:linear-gradient(90deg,#4e8c68,#e28b55)}.track.hot i{background:#bd4f3c}.vent{margin-top:9px}.feedback{margin-top:10px;min-height:30px;color:#5a694d;font-size:.78rem;font-weight:800}.feedback.alarm{color:#99362a}.footer{margin:12px 0 0;color:#c1cfaa;font-size:.72rem}.result-total{font-variant-numeric:tabular-nums;font-size:2.35rem;font-weight:1000;margin:9px 0 6px}.result-buttons{display:flex;gap:8px;margin-top:13px}.result-buttons button:last-child{background:#ced9b4;border:2px solid #3b593c;border-radius:7px;font-size:.8rem;font-weight:900}.kb{font-size:.73rem;border-top:1px solid #adbc9c;margin-top:11px;padding-top:6px;color:#53624b}.kb summary{font-weight:950;cursor:pointer}
+@keyframes blink{0%,46%,64%,100%{opacity:1}53%{opacity:.2}}@keyframes scan{0%,100%{transform:translate(-50%,0) rotate(-8deg)}50%{transform:translate(-50%,-10px) rotate(7deg)}}@keyframes clear{35%{background:#d1f3a1}}@media(max-width:750px){.shell{width:calc(100% - 26px);padding:12px 0 18px}.layout{grid-template-columns:minmax(0,1fr);gap:10px;margin-top:10px}.machine{height:clamp(95px,24vw,160px)}.bays{padding:8px;gap:7px}.side{padding:13px}.factory,.side{box-shadow:3px 3px 0 #0a2418}.factory-head{padding:6px 8px}.dispatch{padding:7px}.order{padding:4px;min-height:66px;font-size:.69rem;gap:2px}.order small{font-size:.57rem}.instructions{margin:11px 0}.lead{margin-top:9px}.bay-action{min-height:43px;padding:5px 7px}.bay-title{padding:6px 6px 0;font-size:.66rem}.stats b{font-size:1.19rem}.panel{padding:6px 0}.feedback{min-height:21px}.side .vent{min-height:38px}}@media(max-width:370px){.brand{font-size:.87rem}.button-min,.clock{padding-left:7px;padding-right:7px}.orders{gap:4px}.order{font-size:.64rem}.order-key{display:none}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body><main class="shell" id="app" data-stage="menu">
+<header class="top"><div class="brand"><span class="brand-mark" aria-hidden="true">◈</span> Interim Shift</div><div class="top-right"><button class="button-min" type="button" id="mute" aria-pressed="true">Sound on</button><button class="button-min" type="button" id="pause" hidden>Pause</button><output class="clock" id="clock" aria-label="Seconds left">70s</output></div></header>
+<div class="layout">
+<section id="factory" class="factory" aria-label="Chip assembly factory"><div class="factory-head"><span>Quill Circuits · Fabrication</span><span class="power-tag" id="power">Standby</span></div>
+<div class="bays" id="bays"></div>
+<div class="dispatch"><div class="dispatch-head"><span>Work order queue</span><span id="queue-count">0 / 4</span></div><div class="orders" id="orders"></div></div></section>
+<section class="side" id="intro"><div class="kicker">Acting chief · one shift</div><h1>Interim<br>Shift</h1>
+<p class="lead">The chair is empty. The chip orders are very much not.</p>
+<ol class="instructions"><li>Pick an order, then send it to a free bay.</li><li>Match the bay to save time and heat.</li><li>Vent heat and clear 10 orders before handover.</li></ol>
+<button type="button" class="primary" id="start">Clock in</button><p class="side-foot" id="best">Best shift: —</p>
+<details class="kb"><summary>Keyboard controls</summary><p>1–4 selects an order. Q sends to Precision. E sends to Volume. V vents. Esc pauses. M toggles sound.</p></details>
+</section>
+<section class="side" id="play" hidden><div class="kicker">Handover targets</div><h2>Keep the line<br>moving.</h2>
+<div class="panel stats"><div><small>Shipped on time</small><b id="done">0 / 10</b></div><div><small>Report strikes left</small><b class="strikes" id="strikes">3</b></div></div>
+<div class="panel"><div class="panel-label" id="heat-label">Core heat 0%</div><div class="track heat" id="heat"><i></i></div><button type="button" class="primary vent" id="vent">Vent heat [V]</button></div>
+<div class="panel"><div class="panel-label">Selected order</div><p id="selected">Pick an order below the bays.</p></div>
+<p class="feedback" id="feedback" aria-live="polite"></p></section>
+<section class="side" id="paused" hidden><div class="kicker">Line paused</div><h2>Break room</h2><p class="lead">Orders and heat won’t change while you’re away.</p><button type="button" class="primary" id="resume" style="margin-top:14px">Resume shift</button></section>
+<section class="side" id="result" hidden><div class="kicker" id="badge"></div><h2 id="headline"></h2><p class="result-total" id="score"></p><p class="lead" id="details"></p><div class="result-buttons"><button type="button" class="primary" id="retry">New shift</button><button type="button" id="title">Title</button></div></section>
+</div><p class="footer">Quill Circuits is a fictional chip company. Your best shift stays on this device.</p>
+</main>
+<script>
+'use strict';
+const byId=id=>document.getElementById(id);
+const app=byId('app');
+const storageKey='quill.interim-shift.v1';
+const shiftEnd=70, targetCount=10;
+const specs=[
+  {name:'Precision', hotkey:'Q', color:'#9bd5c6', arm:'#519886', symbol:'◆'},
+  {name:'Volume', hotkey:'E', color:'#cfaa70', arm:'#a96d58', symbol:'■'},
+];
+const models=[
+  {name:'Optic', bay:0, duration:5.3, heat:5.4, reward:130, deadline:17},
+  {name:'Tile', bay:1, duration:4.6, heat:5.8, reward:110, deadline:16},
+  {name:'Sense', bay:0, duration:5.8, heat:6.3, reward:150, deadline:19},
+  {name:'Stack', bay:1, duration:5.7, heat:6.5, reward:140, deadline:18},
+];
+const arrivals=[0,3.9,7.5,11.6,15.8,20,24.2,28.2,32.2,34.1,36,40.4,44.4,48.7,53,57.3,61.4];
+let audio, sound=true, best=0, state='menu';
+let time=0, last=performance.now(), lastPaint=0, heat=16, ventAt=0, strikes=3, done=0, points=0;
+let arrival=0, selected=-1, surge=false, dispatch=[];
+let queue=[], lanes=[null,null], shipped=[-1,-1], feedback='', alarm=false;
+try {
+  const saved=JSON.parse(localStorage.getItem(storageKey)||'{}');
+  if(Number.isFinite(saved.best)&&saved.best>=0)best=Math.floor(saved.best);
+  sound=saved.sound!==false;
+} catch {}
+const persist=()=>{try{localStorage.setItem(storageKey,JSON.stringify({best,sound}));}catch{}};
+const chime = {
+  select:[[0,530,.08]], load:[[0,265,.1],[.06,430,.12]], ship:[[0,360,.1],[.055,520,.14],[.11,690,.18]],
+  vent:[[0,210,.18],[.07,120,.22]], miss:[[0,185,.15],[.09,120,.22]],
+  clear:[[0,420,.21],[.09,540,.21],[.18,700,.24],[.28,840,.26]],
+};
+function beep(kind){
+  if(!sound)return;
+  try{
+    audio??=new (window.AudioContext||window.webkitAudioContext)();
+    if(audio.state==='suspended')audio.resume().catch(()=>{});
+    for(const [offset,hz,length] of chime[kind]){
+      const when=audio.currentTime+offset, tone=audio.createOscillator(), level=audio.createGain();
+      tone.type=kind==='vent'?'sine':'triangle';tone.frequency.value=hz;
+      level.gain.setValueAtTime(.05,when);level.gain.exponentialRampToValueAtTime(.001,when+length);
+      tone.connect(level);level.connect(audio.destination);tone.start(when);tone.stop(when+length);
+    }
+  }catch{}
+}
+function say(text,urgent=false){feedback=text;alarm=urgent}
+const bayNodes = specs.map((spec,index)=>{
+  const node=document.createElement('section');node.className='bay-shell';
+  node.style.setProperty('--machine',spec.color);node.style.setProperty('--arm',spec.arm);
+  node.innerHTML='<div class="bay-title"><span>'+spec.symbol+' '+spec.name+'</span><kbd>'+spec.hotkey+'</kbd></div><div class="machine" aria-hidden="true"><div class="robot"><i class="antenna"></i><div class="eye-panel"></div><i class="mouth"></i></div><i class="chip"></i></div><button class="bay-action" type="button"><span></span><strong></strong><div class="bay-progress" aria-hidden="true"><i></i></div></button>';
+  node.querySelector('button').addEventListener('click',()=>assign(index));
+  byId('bays').append(node);return node;
+});
+const orderNodes=Array.from({length:4},(_,index)=>{
+  const node=document.createElement('button');node.type='button';node.className='order';
+  node.innerHTML='<span class="order-key" aria-hidden="true">'+(index+1)+'</span><b></b><span class="order-time"></span><small></small>';
+  node.addEventListener('click',()=>select(index));byId('orders').append(node);return node;
+});
+
+function paint(){
+  app.dataset.stage=state;
+  for(const [id,show] of Object.entries({intro:state==='menu',play:state==='running',paused:state==='paused',result:state==='result'}))byId(id).hidden=!show;
+  byId('pause').hidden=state!=='running';
+  byId('best').textContent=best?'Best shift: '+best.toLocaleString('en-US')+' pts':'Best shift: —';
+  byId('mute').textContent='Sound '+(sound?'on':'off');
+  byId('mute').setAttribute('aria-pressed',String(sound));
+  const remaining=Math.max(0,Math.ceil(shiftEnd-time)),clock=byId('clock');
+  clock.value=remaining+'s';clock.classList.toggle('late',remaining<=12);
+  byId('factory').dataset.hot=String(heat>=75);
+  byId('power').classList.toggle('alert',state==='running'&&heat>=75);
+  byId('power').textContent=state==='running'?(heat>=75?'Core hot':'Running'):state==='paused'?'Paused':'Standby';
+  byId('queue-count').textContent=queue.length+' / 4';
+  byId('done').textContent=done+' / '+targetCount;
+  byId('strikes').textContent=strikes+' / 3';
+  byId('heat-label').textContent='Core heat '+Math.round(heat)+'%';
+  byId('heat').classList.toggle('hot',heat>=75);
+  byId('heat').firstElementChild.style.width=heat+'%';
+  const ventReady=Math.max(0,Math.ceil(ventAt-time)), vent=byId('vent');
+  vent.disabled=state!=='running'||ventReady>0||heat<12;
+  vent.textContent=ventReady?'Vent cools in '+ventReady+'s':'Vent heat [V]';
+  const current=queue.find(job=>job.id===selected);
+  byId('selected').textContent=current?current.model.name+' · '+specs[current.model.bay].name+' bay':'Pick an order below the bays.';
+  if(byId('feedback').textContent!==feedback)byId('feedback').textContent=feedback;
+  byId('feedback').classList.toggle('alarm',alarm);
+  orderNodes.forEach((button,i)=>{
+    const job=queue[i], name=job?.model.name??'Empty';
+    const seconds=job?Math.max(0,Math.ceil(job.due-time)):0;
+    button.classList.toggle('empty',!job);
+    button.dataset.selected=String(!!job&&job.id===selected);
+    button.dataset.urgent=String(!!job&&seconds<=5);
+    button.setAttribute('aria-pressed',String(!!job&&job.id===selected));
+    button.disabled=!job||state!=='running';
+    button.querySelector('b').textContent=name;
+    button.querySelector('.order-time').textContent=job?'Due '+seconds+'s':'—';
+    button.querySelector('small').textContent=job?specs[job.model.bay].symbol+' '+specs[job.model.bay].name:'Awaiting order';
+    button.setAttribute('aria-label',job?'Order '+(i+1)+', '+name+', '+specs[job.model.bay].name+', '+seconds+' seconds left':'Empty order slot');
+  });
+  bayNodes.forEach((node,i)=>{
+    const lane=lanes[i], button=node.querySelector('button');
+    const speed=current&&current.model.bay!==i;
+    const ready=state==='running'&&!!current&&!lane;
+    node.classList.toggle('busy',!!lane);
+    node.classList.toggle('done',shipped[i]>=0&&time-shipped[i]<.55);
+    button.disabled=!ready;
+    button.classList.toggle('ready',ready);
+    button.classList.toggle('mismatch',ready&&speed);
+    button.firstElementChild.textContent=lane?'Building '+lane.job.model.name:ready?'Send '+current.model.name:'Idle';
+    button.querySelector('strong').textContent=lane?Math.ceil(lane.finish-time)+'s':ready?(speed?'Slow':'Match'):'—';
+    button.querySelector('i').style.width=lane?Math.min(100,Math.max(0,(time-lane.at)/(lane.finish-lane.at)*100))+'%':'0';
+    button.setAttribute('aria-label',specs[i].name+(ready?' — dispatch '+current.model.name:' bay'));
+  });
+}
+function select(i){
+  if(state!=='running'||!queue[i])return;
+  selected=queue[i].id===selected?-1:queue[i].id;beep('select');paint();
+}
+function assign(i){
+  if(state!=='running'||lanes[i])return;
+  const pos=queue.findIndex(job=>job.id===selected);
+  if(pos<0)return;
+  const [job]=queue.splice(pos,1);
+  selected=-1;
+  const matched=job.model.bay===i;
+  const duration=job.model.duration*(matched?1:1.49)*(heat>=76?1.22:1);
+  lanes[i]={job,matched,at:time,finish:time+duration};
+  heat=Math.min(100,heat+(matched?3:12));
+  say(matched?job.model.name+' loaded into its matched bay.':job.model.name+' rerouted. Extra heat and time.',!matched);
+  beep('load');paint();
+}
+function vent(){
+  if(state!=='running'||time<ventAt||heat<12)return;
+  heat=Math.max(0,heat-31);ventAt=time+8;
+  beep('vent');say('Coolant flushed. Eight seconds to recharge.');paint();
+}
+function finish(won,message){
+  if(state!=='running')return;
+  state='result';
+  const score=points+strikes*120;
+  const isBest=won&&score>best;
+  if(isBest){best=score;persist();}
+  byId('badge').textContent=won?(isBest?'New best shift':'Handover accepted'):'Shift report';
+  byId('headline').textContent=won?'Factory handed over':'The line stalled';
+  byId('score').textContent=score.toLocaleString('en-US')+' pts';
+  byId('details').textContent=message;
+  beep(won?'clear':'miss');paint();byId('retry').focus({preventScroll:true});
+}
+function loseStrike(message){
+  strikes--;
+  say(message,true);beep('miss');
+  if(strikes===0)finish(false,message);
+}
+function addArrivals(){
+  while(state==='running'&&arrival<arrivals.length&&time>=arrivals[arrival]){
+    const id=arrival++;
+    const at=arrivals[id], model=dispatch[id];
+    if(queue.length===4){loseStrike('The queue overflowed. Dispatch waiting orders sooner.');continue;}
+    queue.push({id,model,due:at+model.deadline});
+    if(id===0)say('First order ready. Choose it, then tap a matched bay.');
+  }
+}
+function update(dt){
+  time=Math.min(shiftEnd,time+dt);
+  if(!surge&&time>=33){
+    surge=true;heat=Math.min(100,heat+20);say('Power surge. Three rush arrivals are clustered together.',true);
+    beep('miss');
+  }
+  const heatRate=lanes.reduce((n,lane)=>n+(lane?lane.job.model.heat*(lane.matched?1:1.4):0),0);
+  heat=Math.max(0,Math.min(100,heat+(heatRate-4.25)*dt));
+  for(let i=0;i<lanes.length&&state==='running';i++){
+    const lane=lanes[i];
+    if(!lane)continue;
+    if(lane.finish<=time&&lane.finish<=lane.job.due){
+      const bonus=Math.max(0,Math.floor(lane.job.due-lane.finish));
+      done++;points+=lane.job.model.reward+bonus*3+(lane.matched?40:0);shipped[i]=time;
+      lanes[i]=null;say(lane.job.model.name+' shipped on time.');beep('ship');
+    }else if(lane.job.due<=time){
+      lanes[i]=null;loseStrike(lane.job.model.name+' missed its delivery window.');
+    }
+  }
+  if(state!=='running')return;
+  if(heat>=100){
+    heat=63;loseStrike('Thermal trip. Vent before the core reaches 100%.');
+  }
+  queue=queue.filter(job=>{
+    if(job.due>time||state!=='running')return true;
+    if(selected===job.id)selected=-1;
+    loseStrike(job.model.name+' expired in the queue.');
+    return false;
+  });
+  addArrivals();
+  if(state==='running'&&time>=shiftEnd)finish(done>=targetCount,done>=targetCount?
+    done+' orders shipped on time. The morning crew takes it from here.':
+    'You shipped '+done+' of the '+targetCount+' orders required for handover.');
+}
+function begin(){
+  time=0;last=performance.now();heat=16;ventAt=0;strikes=3;done=0;points=0;arrival=0;selected=-1;surge=false;
+  queue=[];lanes=[null,null];shipped=[-1,-1];feedback='';alarm=false;
+  dispatch=arrivals.map((_,i)=>models[(i%2)+(i===0?0:Math.random()<.5?2:0)]);
+  state='running';addArrivals();beep('load');paint();orderNodes[0].focus({preventScroll:true});
+}
+function pause(){
+  if(state!=='running')return;
+  state='paused';paint();byId('resume').focus({preventScroll:true});
+}
+function resume(){
+  if(state!=='paused')return;
+  state='running';last=performance.now();paint();
+}
+function mute(){sound=!sound;persist();if(sound)beep('select');paint()}
+function tick(now){
+  const delta=Math.max(0,Math.min(.22,(now-last)/1000));last=now;
+  if(state==='running'){
+    update(delta);
+    if(now-lastPaint>=89){lastPaint=now;paint();}
+  }
+  requestAnimationFrame(tick);
+}
+byId('start').onclick=begin;byId('retry').onclick=begin;byId('vent').onclick=vent;
+byId('pause').onclick=pause;byId('resume').onclick=resume;byId('mute').onclick=mute;
+byId('title').onclick=()=>{state='menu';time=0;queue=[];lanes=[null,null];paint();byId('start').focus();};
+window.addEventListener('keydown',event=>{
+  if(event.repeat||event.altKey||event.ctrlKey||event.metaKey)return;
+  if(event.code==='KeyM'){event.preventDefault();mute();return;}
+  if(event.code==='Escape'&&(state==='running'||state==='paused')){event.preventDefault();state==='running'?pause():resume();return;}
+  if(state!=='running')return;
+  const pick=/^Digit([1-4])$/.exec(event.code);
+  if(pick){event.preventDefault();select(Number(pick[1])-1);}
+  else if(event.code==='KeyQ'||event.code==='KeyE'){event.preventDefault();assign(event.code==='KeyQ'?0:1);}
+  else if(event.code==='KeyV'){event.preventDefault();vent();}
+});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)pause();});
+paint();requestAnimationFrame(tick);
+</script>
+</body></html>

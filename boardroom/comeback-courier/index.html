@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Dash back to HQ in a hand-drawn arcade runner. Leap traffic, duck security beams and reclaim three access cards.">
+<meta name="theme-color" content="#102c36">
+<title>Comeback Courier</title>
+<style>
+:root{font-family:"Trebuchet MS",system-ui,sans-serif;color:#fff6db;background:#102c36;--ink:#102c36;--cream:#fff4d5;--yellow:#ffcd59;--mint:#95ecbd}
+*{box-sizing:border-box}body{margin:0;min-height:100dvh;background:radial-gradient(ellipse at top,#16606b,#102c36 57%)}
+[hidden]{display:none!important}button{font:inherit;cursor:pointer;touch-action:manipulation}button:focus-visible,canvas:focus-visible{outline:3px solid #aef2ff;outline-offset:4px}
+main{width:min(100%,1030px);margin:auto;padding:clamp(12px,4vw,35px) clamp(10px,4vw,30px) max(24px,env(safe-area-inset-bottom))}
+header{display:flex;align-items:end;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.tag{font-size:11px;font-weight:900;letter-spacing:.18em;text-transform:uppercase;color:var(--mint);margin:0 0 4px}
+h1{font-family:"Arial Black","Trebuchet MS",sans-serif;font-size:clamp(30px,7vw,60px);font-weight:1000;letter-spacing:-.075em;line-height:1.02;margin:0}
+.tools{display:flex;gap:6px}.utility{min-height:42px;color:var(--cream);padding:0 10px;background:#163c46;border:1px solid #adc3bd88;border-radius:9px;font-size:13px;font-weight:800}
+.hud{display:flex;gap:6px 16px;justify-content:space-between;align-items:center;flex-wrap:wrap;background:#0e242c;border:1px solid #799da577;border-radius:12px 12px 0 0;padding:9px 12px;font-size:clamp(11px,2.8vw,16px);font-weight:850}
+.hud strong{color:var(--yellow)}.track{height:5px;background:#243a3e;padding:0}.track span{height:100%;width:0;display:block;background:linear-gradient(90deg,#8de2ad,#ffd168)}
+.stage{position:relative;overflow:hidden;border:1px solid #799da577;border-top:0;border-radius:0 0 14px 14px;box-shadow:0 13px 35px #0005}
+canvas{display:block;width:100%;aspect-ratio:16/9;background:#7cd9d5;touch-action:none}
+.overlay{display:grid;position:absolute;inset:0;place-items:center;background:#0c22338c;padding:8px}
+.card{width:min(94%,430px);background:var(--cream);color:var(--ink);border:3px solid var(--ink);box-shadow:5px 5px 0 #102c36;border-radius:15px;text-align:center;padding:clamp(9px,2.8vw,24px)}
+.card h2{font-family:"Arial Black","Trebuchet MS",sans-serif;font-size:clamp(21px,4.6vw,36px);line-height:1.05;margin:0 0 5px;letter-spacing:-.055em}
+.card p{font-size:clamp(11px,2.6vw,15px);line-height:1.35;margin:0 auto 9px;max-width:340px}
+.card button{min-height:42px;padding:5px 16px;border-radius:10px;border:2px solid var(--ink);background:var(--yellow);box-shadow:0 3px 0 var(--ink);font-weight:900;color:var(--ink)}
+.card button:active,.control:active{transform:translateY(2px);box-shadow:none}
+.control-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.control{color:var(--ink);background:var(--mint);border:2px solid #12313b;border-radius:12px;min-height:53px;font-weight:900;font-size:clamp(15px,3.2vw,19px);box-shadow:0 4px 0 #071e27}
+.control:last-child{background:var(--yellow)}.control small{font-size:11px;margin-left:5px;opacity:.78}
+.control:disabled{opacity:.52;cursor:default}.note{font-size:clamp(12px,3vw,15px);line-height:1.35;margin:12px 1px 0;color:#d0eee7;min-height:1.3em}
+@media(max-width:420px){main{padding-top:12px}header{margin-bottom:9px}.stage .card{padding:8px}.card p{margin-bottom:6px}.stage .card button{min-height:38px}.control small{display:none}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<main>
+<header><div><p class="tag">Northwild Dispatch</p><h1>Comeback Courier</h1></div><div class="tools"><button id="sound" class="utility" type="button" aria-pressed="true">Sound on</button><button id="pause" class="utility" type="button" disabled>Pause</button></div></header>
+<div class="hud" aria-label="Run status"><span id="district">Market Row</span><span>Cards <strong id="cards">0 / 3</strong></span><span>Hearts <strong id="hearts">3 / 3</strong></span><span>Best <strong id="best">—</strong></span></div>
+<div class="track" aria-hidden="true"><span id="track"></span></div>
+<section class="stage">
+<canvas id="world" width="960" height="540" tabindex="0" aria-label="Side-scrolling city route. Space to jump, down arrow to slide."></canvas>
+<div class="overlay" id="overlay"><div class="card"><h2 id="headline">The route is back on</h2><p id="message">The board called you back. Grab three keycards from the delivery route and reach HQ.</p><button type="button" id="start">Start the run</button></div></div>
+</section>
+<div class="control-row"><button class="control" id="jump" type="button" disabled>↑ Jump <small>SPACE</small></button><button class="control" id="slide" type="button" disabled>↓ Slide <small>DOWN</small></button></div>
+<p class="note" id="tip" aria-live="polite">Jump over carts. Slide under striped beams. Keycards glow gold.</p>
+</main>
+<script>
+(() => {
+  'use strict';
+  const $=id=>document.getElementById(id), canvas=$('world'), ctx=canvas.getContext('2d');
+  const W=960,H=540,FLOOR=417,RUNNER=155,GOAL=7770,STEP=1/120;
+  const district=[
+    {name:'Market Row',start:0,sky:'#85e5d3',haze:'#fff1a9',far:'#56b9af',near:'#309392',road:'#30465c'},
+    {name:'Skyline Overpass',start:2580,sky:'#a8c8fc',haze:'#f8dbff',far:'#818ed3',near:'#485b98',road:'#35455e'},
+    {name:'Headquarters',start:5200,sky:'#ffc8ad',haze:'#ffe09f',far:'#ef977d',near:'#bd6578',road:'#4c3f54'},
+  ];
+  const obstacles=[
+    [648,'cart'],[1120,'beam'],[1545,'cart'],[2040,'beam'],[2450,'cart'],
+    [2810,'beam'],[3260,'cart'],[3640,'beam'],[4100,'cart'],[4540,'beam'],[4960,'cart'],
+    [5400,'cart'],[5810,'beam'],[6330,'cart'],[6820,'beam'],[7300,'cart'],
+  ].map(([x,type])=>({x,type,wide:type==='cart'?58:108}));
+  const badges=[{x:664,y:FLOOR-112},{x:3648,y:FLOOR-17},{x:6346,y:FLOOR-113}];
+  const number=key=>{try{return Number(localStorage.getItem(key))||0;}catch{return 0;}};
+  const persist=(key,value)=>{try{localStorage.setItem(key,String(value));}catch{}};
+  const art=(seed)=>((Math.sin(seed*79.381+4.29)*53761.298)%1+1)%1;
+  let phase='menu', high=number('cc-run-best'), muted=Boolean(number('cc-run-muted')), audio=null;
+  let elapsed=0,lastFrame=0,accumulator=0,currentDistrict=0;
+  let player,run,particles;
+  const screen=(world)=>RUNNER+world-run.x;
+  const active=()=>phase==='playing';
+  const reset=()=>{
+    player={lift:0,velocity:0,slide:0,invincible:0,hearts:3,jumpBuffer:0};
+    run={x:0,clock:0,speed:302,cards:[false,false,false],hits:0};
+    particles=[];currentDistrict=0;accumulator=0;
+  };
+  function tone(kind){
+    if(muted)return;
+    try{
+      audio??=new (window.AudioContext||window.webkitAudioContext)();
+      if(audio.state==='suspended') void audio.resume().catch(()=>{});
+      const notes={jump:[300,490],slide:[240,130],card:[620,820,1080],hit:[156,100],win:[465,586,698,932],start:[366,556]}[kind];
+      for(const [i,freq] of notes.entries()){
+        const voice=audio.createOscillator(),gain=audio.createGain(),t=audio.currentTime+i*.06;
+        voice.type=kind==='hit'?'sawtooth':'triangle';voice.frequency.setValueAtTime(freq,t);
+        voice.frequency.exponentialRampToValueAtTime(freq*.86,t+.10);
+        gain.gain.setValueAtTime(.001,t);gain.gain.exponentialRampToValueAtTime(.105,t+.012);gain.gain.exponentialRampToValueAtTime(.001,t+.14);
+        voice.connect(gain).connect(audio.destination);voice.start(t);voice.stop(t+.15);
+      }
+    }catch{}
+  }
+  function change(next,headline,message,label){
+    phase=next;
+    $('overlay').hidden=active();
+    $('pause').disabled=!active();
+    $('jump').disabled=$('slide').disabled=!active();
+    if(!active()){
+      $('headline').textContent=headline;$('message').textContent=message;$('start').textContent=label;
+      if(next!=='menu') $('start').focus({preventScroll:true});
+    }else canvas.focus({preventScroll:true});
+    updateHud();
+  }
+  function launch(){
+    if(phase==='paused'){
+      change('playing');
+      return;
+    }
+    reset();$('tip').textContent='First keycard floats over the market cart. Jump just before you reach it.';
+    tone('start');change('playing');
+  }
+  function pause(){if(active())change('paused','Route paused','Take a breath. Your place on the route is saved while this tab is open.','Resume');}
+  function jump(){
+    if(!active())return;
+    if(player.lift>1){player.jumpBuffer=.12;return;}
+    player.slide=0;player.lift=1;player.velocity=700;
+    spray(RUNNER,FLOOR-3,'#f5f0cc',6,.34);tone('jump');
+  }
+  function slide(){
+    if(!active()||player.lift>3||player.slide>.13)return;
+    player.slide=.72;
+    spray(RUNNER-12,FLOOR-7,'#a7ecd0',7,.44);tone('slide');
+  }
+  function spray(x,y,color,count,lifetime){
+    for(let n=0;n<count;n++)particles.push({x,y,color,ttl:lifetime,life:lifetime,dx:(art(elapsed+n*2)-.68)*310,dy:-45-art(elapsed+n+18)*160,size:2+art(n+count)*7});
+    if(particles.length>120)particles.splice(0,particles.length-120);
+  }
+  function updateHud(){
+    $('district').textContent=district[currentDistrict].name;
+    $('cards').textContent=run.cards.filter(Boolean).length+' / 3';
+    $('hearts').textContent=player.hearts+' / 3';
+    $('best').textContent=high?high.toLocaleString('en-US'):'—';
+    $('track').style.width=Math.min(100,run.x/GOAL*100)+'%';
+    $('sound').textContent=muted?'Sound off':'Sound on';
+    $('sound').setAttribute('aria-pressed',String(!muted));
+  }
+  function finish(){
+    const got=run.cards.filter(Boolean).length;
+    const points=got*1000+Math.floor(run.x/40)+player.hearts*100;
+    if(points>high){high=points;persist('cc-run-best',points);}
+    if(got===3&&player.hearts>0){
+      spray(RUNNER,FLOOR-110,'#ffd455',32,.9);tone('win');
+      change('won','Welcome back to HQ!',`Three cards delivered. ${points.toLocaleString('en-US')} points and ${player.hearts} hearts left.`,'Run again');
+    }else{
+      change('lost',player.hearts===0?'Route interrupted':'Access denied',player.hearts===0?
+        `${got} of 3 cards recovered. Jump carts and duck beneath beams to keep your hearts.`:
+        `You reached HQ with ${got} of 3 cards. Watch for the gold card above each marked obstacle.`,'Retry the route');
+    }
+  }
+  function tick(dt){
+    run.clock+=dt;run.x+=run.speed*dt;
+    player.slide=Math.max(0,player.slide-dt);player.invincible=Math.max(0,player.invincible-dt);
+    player.jumpBuffer=Math.max(0,player.jumpBuffer-dt);
+    if(player.lift>0){
+      player.lift+=player.velocity*dt;player.velocity-=1860*dt;
+      if(player.lift<=0){player.lift=0;player.velocity=0;spray(RUNNER,FLOOR-3,'#ffefd0',4,.26);if(player.jumpBuffer)jump();}
+    }
+    const zone=run.x>=district[2].start?2:run.x>=district[1].start?1:0;
+    if(zone!==currentDistrict){
+      currentDistrict=zone;run.speed=302+zone*18;tone('start');
+      $('tip').textContent=zone===1?'Overpass keycard is underneath a striped beam. Slide low.':'Final keycard is above a luggage cart. Then head for the HQ doors.';
+      updateHud();
+    }
+    const feet=FLOOR-player.lift, body=feet-(player.slide>0?28:65);
+    for(const obstacle of obstacles){
+      if(player.invincible||Math.abs(obstacle.x-run.x)>obstacle.wide/2+13)continue;
+      const upper=obstacle.type==='cart'?FLOOR-44:FLOOR-120, lower=obstacle.type==='cart'?FLOOR:FLOOR-34;
+      if(feet<=upper||body>=lower)continue;
+      player.hearts--;player.invincible=1.12;run.hits++;
+      tone('hit');spray(RUNNER,feet-27,'#ff776e',15,.8);
+      $('tip').textContent=obstacle.type==='cart'?'Cart hit. Jump sooner when the next cart reaches you.':'Beam hit. Slide before the low beam reaches you.';
+      updateHud();if(!player.hearts){finish();return;}
+    }
+    for(const [index,badge] of badges.entries()){
+      if(run.cards[index]||Math.abs(badge.x-run.x)>34||badge.y+15<body||badge.y-15>feet)continue;
+      run.cards[index]=true;tone('card');spray(RUNNER,badge.y,'#ffdf70',17,.74);
+      $('tip').textContent='Keycard secured. '+(3-run.cards.filter(Boolean).length)+' remaining.';
+      updateHud();
+    }
+    if(run.x>=GOAL)finish();
+  }
+  function box(x,y,w,h,fill,r=0,line=null){
+    ctx.fillStyle=fill;ctx.beginPath();
+    if(r)ctx.roundRect(x,y,w,h,r);else ctx.rect(x,y,w,h);
+    ctx.fill();if(line){ctx.strokeStyle=line;ctx.lineWidth=3;ctx.stroke();}
+  }
+  function ellipse(x,y,rx,ry,fill){
+    ctx.fillStyle=fill;ctx.beginPath();ctx.ellipse(x,y,rx,ry,0,0,Math.PI*2);ctx.fill();
+  }
+  function path(points,fill,stroke=null,width=3){
+    ctx.fillStyle=fill;ctx.beginPath();ctx.moveTo(...points[0]);for(const point of points.slice(1))ctx.lineTo(...point);
+    ctx.closePath();ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=width;ctx.stroke();}
+  }
+  function text(value,x,y,size,color,align='left'){
+    ctx.font='900 '+size+'px "Trebuchet MS",sans-serif';ctx.textAlign=align;ctx.fillStyle=color;ctx.fillText(value,x,y);
+  }
+  function background(time){
+    const zone=district[currentDistrict],camera=run.x+(phase==='menu'?time*28:0);
+    const gradient=ctx.createLinearGradient(0,0,0,FLOOR);
+    gradient.addColorStop(0,zone.sky);gradient.addColorStop(1,zone.haze);
+    box(0,0,W,H,gradient);
+    ellipse(746,99,70,70,'#fff1b275');ellipse(746,99,50,50,'#fffbda');
+    for(let i=0;i<9;i++){
+      const x=((i*154+95-camera*.12)%1430+1430)%1430-130,y=74+art(i*9)*121;
+      ellipse(x,y,49,15,'#ffffff6c');ellipse(x+23,y-7,25,19,'#ffffff6c');ellipse(x-19,y-5,25,13,'#ffffff6c');
+    }
+    for(const [layer,width,base,shade,pace] of [[1,98,337,zone.far,.27],[2,144,384,zone.near,.51]]){
+      const first=Math.floor(camera*pace/width);
+      for(let i=first-1;i<first+Math.ceil(W/width)+2;i++){
+        const x=i*width-camera*pace, height=54+art(i+layer*17)*143;
+        const building=width*(.58+art(i+3)*.30),top=base-height;
+        box(x,top,building,height+8,shade,4);
+        box(x-4,top-6,building+8,9,shade,3);
+        for(let c=0;c<Math.floor((building-16)/19);c++)for(let row=0;row<Math.floor(height/30)-1;row++){
+          if(art(i*13+c*17+row*7)>.32)box(x+10+c*19,top+13+row*26,9,12,layer===2?'#ffe5b58a':'#fff5d250',2);
+        }
+        if(layer===2&&i%4===0){box(x+9,top-24,13,25,shade,3);box(x+21,top-20,27,4,shade,2);}
+      }
+    }
+    box(0,369,W,52,'#566c65');
+    for(let x=-((camera*.83)%73);x<W+20;x+=73){
+      box(x-3,365,6,50,'#264857',2);box(x-4,367,8,11,'#ecbf75',2);
+    }
+    box(0,381,W,6,'#345863');box(0,405,W,13,'#dfb964');
+    box(0,FLOOR,W,H-FLOOR,zone.road);box(0,FLOOR,W,6,'#132e38');
+    for(let x=-(camera%108);x<W+70;x+=108){
+      box(x,452,64,3,'#f4c574aa',2);box(x+13,497,49,2,'#91b5be45',1);
+    }
+  }
+  function obstacleArt(obstacle){
+    const x=screen(obstacle.x),cart=obstacle.type==='cart';
+    if(x<-130||x>W+130)return;
+    const ink='#18303e';
+    if(cart){
+      ellipse(x,FLOOR-2,40,9,'#172b415f');
+      box(x-33,FLOOR-45,64,41,'#d96d60',8,ink);
+      box(x-26,FLOOR-41,19,29,'#f7ae82',5,ink);
+      box(x-4,FLOOR-42,29,27,'#ffe1a2',5,ink);
+      for(const wheel of [-21,21]){ellipse(x+wheel,FLOOR-5,9,9,ink);ellipse(x+wheel,FLOOR-5,4,4,'#d7e8df');}
+      box(x-39,FLOOR-53,10,26,'#56747f',3,ink);box(x-48,FLOOR-55,16,5,ink,2);
+      text('↑',x,FLOOR-66,19,'#fff4cd','center');
+    }else{
+      box(x-55,FLOOR-115,9,112,'#627989',2,ink);box(x+46,FLOOR-115,9,112,'#627989',2,ink);
+      box(x-58,FLOOR-120,116,87,'#f0bb58',8,ink);
+      for(let p=-49;p<43;p+=21)path([[x+p,FLOOR-45],[x+p+12,FLOOR-45],[x+p+28,FLOOR-66],[x+p+16,FLOOR-66]],ink);
+      box(x-37,FLOOR-107,74,29,'#1e3b4b',5);text('DUCK ↓',x,FLOOR-87,17,'#fff3cd','center');
+      ellipse(x-41,FLOOR-106,5,5,'#ff8268');ellipse(x+41,FLOOR-106,5,5,'#ff8268');
+    }
+  }
+  function cityGoal(){
+    const x=screen(GOAL+14);
+    if(x>W+210||x<-210)return;
+    box(x-104,FLOOR-210,208,210,'#493956',15,'#253348');
+    box(x-87,FLOOR-194,174,42,'#ffe2a0',9,'#253348');text('NORTHWILD HQ',x,FLOOR-168,20,'#453657','center');
+    box(x-70,FLOOR-146,140,146,'#7ee6cf',10,'#213741');
+    box(x-63,FLOOR-140,54,137,'#2d6a78',5);box(x+9,FLOOR-140,54,137,'#2d6a78',5);
+    box(x-105,FLOOR-10,210,10,'#ecc68f',4);
+    text('✦',x,FLOOR-77,34,'#f7eab1','center');
+  }
+  function character(time){
+    const slide=player.slide>0, y=FLOOR-player.lift,x=RUNNER;
+    ellipse(x,FLOOR-1,slide?43:31,8,'#10293e65');
+    if(player.invincible>0&&Math.floor(time*19)%2===0)return;
+    ctx.save();ctx.translate(x,y);
+    const ink='#172a3b';
+    if(slide){
+      path([[-16,-22],[-37,-22],[-78,-19+Math.sin(time*15)*4],[-49,-10],[-19,-12]],'#f66868',ink,2);
+      box(-49,-12,29,12,ink,6);box(-57,-8,20,7,'#f5d17c',4,ink);
+      box(-35,-29,59,27,'#f8c65e',10,ink);
+      box(-29,-27,19,20,'#e18c54',6,ink);
+      box(1,-14,25,11,'#d9f6da',5,ink);
+      ellipse(25,-18,16,14,ink);ellipse(27,-17,12,10,'#f0b38b');
+      path([[12,-23],[15,-31],[29,-33],[41,-27],[45,-22],[29,-21]],'#36b4a7',ink,2);
+      ellipse(31,-17,2,3,ink);ctx.restore();
+      return;
+    }
+    const bob=player.lift?0:Math.sin(time*20)*2.6, running=player.lift?0:Math.sin(time*22)*12;
+    ctx.translate(0,bob);
+    ctx.strokeStyle=ink;ctx.lineWidth=8;ctx.lineCap='round';
+    for(const [lateral,phase] of [[-9,running],[10,-running]]){
+      ctx.beginPath();ctx.moveTo(lateral,-27);ctx.lineTo(lateral+phase*.5,-13);ctx.lineTo(lateral+phase,-6);
+      ctx.stroke();ellipse(lateral+phase+4,-5,12,5,'#f5d17c');
+    }
+    path([[-20,-52],[-34,-50],[-79,-42+Math.sin(time*14)*11],[-56,-32+Math.sin(time*13)*7],[-22,-39]],'#f66868',ink,2.2);
+    box(-25,-55,50,34,'#f8c65e',10,ink);box(-23,-45,18,25,'#e18c54',6,ink);
+    box(6,-46,25,15,'#d9f6da',6,ink);
+    box(-8,-58,36,12,'#ef6864',5,ink);
+    ellipse(8,-70,23,24,ink);ellipse(11,-71,19,19,'#f0b38b');
+    path([[-19,-74],[-14,-88],[2,-98],[25,-95],[34,-81],[38,-78],[18,-77]],'#36b4a7',ink,3);
+    path([[2,-93],[19,-94],[32,-84],[21,-82],[8,-84]],'#a5f3cf');
+    ellipse(19,-72,3,4,ink);ellipse(31,-67,4,3,'#ef896e');
+    ctx.restore();
+  }
+  function draw(time){
+    background(time);cityGoal();
+    for(const obstacle of obstacles)obstacleArt(obstacle);
+    for(const [i,item] of badges.entries()){
+      const x=screen(item.x), y=item.y+Math.sin(time*7+i)*4;
+      if(run.cards[i]||x<-50||x>W+50)continue;
+      ellipse(x,y,29,29,'#feed835d');box(x-18,y-10,36,20,'#ffe275',5,'#6d4d40');
+      box(x-11,y-4,8,8,'#56bdb0',2);box(x+1,y-5,11,2,'#786237',1);box(x+1,y,8,2,'#786237',1);
+      text('✦',x,y-20,14,'#ffe8a0','center');
+    }
+    character(time);
+    for(const item of particles){
+      ctx.globalAlpha=Math.max(0,item.ttl/item.life);
+      box(item.x,item.y,item.size,item.size,item.color,2);
+    }
+    ctx.globalAlpha=1;
+  }
+  function frame(ms){
+    const delta=lastFrame?Math.min((ms-lastFrame)/1000,.066):0;
+    lastFrame=ms;if(phase!=='paused')elapsed+=delta;
+    if(active()){
+      accumulator+=delta;
+      while(accumulator>=STEP&&active()){tick(STEP);accumulator-=STEP;}
+      $('track').style.width=Math.min(100,run.x/GOAL*100)+'%';
+    }
+    if(phase!=='paused'){
+      for(const item of particles){item.x+=item.dx*delta;item.y+=item.dy*delta;item.dy+=360*delta;item.ttl-=delta;}
+      particles=particles.filter(item=>item.ttl>0);
+    }
+    draw(elapsed);
+    requestAnimationFrame(frame);
+  }
+  $('start').addEventListener('click',launch);$('jump').addEventListener('click',jump);
+  $('slide').addEventListener('click',slide);$('pause').addEventListener('click',pause);
+  $('sound').addEventListener('click',()=>{muted=!muted;persist('cc-run-muted',Number(muted));if(!muted)tone('start');updateHud();});
+  document.addEventListener('keydown',event=>{
+    if(event.code==='Escape'){if(active())pause();else if(phase==='paused')launch();return;}
+    if(!active()||event.repeat)return;
+    if(['ArrowUp','Space','KeyW'].includes(event.code)){event.preventDefault();jump();}
+    if(['ArrowDown','KeyS'].includes(event.code)){event.preventDefault();slide();}
+  });
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)pause();});
+  if(new URLSearchParams(location.search).has('qa'))window.courierQA=()=>({phase,x:run.x,clock:run.clock,speed:run.speed,cards:[...run.cards],hearts:player.hearts,lift:player.lift,slide:player.slide,hits:run.hits,obstacles,badges});
+  reset();updateHud();requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
