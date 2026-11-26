@@ -1,0 +1,37 @@
+#pocket-rivals-feature{
+  --launch-text:#f8f5ff;--launch-sub:#ddd8ee;
+  margin:0 0 28px;padding:clamp(13px,2.4vw,24px);
+  border:1px solid #7963a2;border-radius:19px;
+  background:radial-gradient(ellipse at 83% 1%,#352451,#1d233d 62%,#171b31);
+  color:var(--launch-text);text-align:left;
+}
+#pocket-rivals-feature h2{color:var(--launch-text);font-size:clamp(22px,4vw,31px);line-height:1.15;margin:0}
+nav + #pocket-rivals-feature{margin-top:14px}
+#pocket-rivals-feature .launch-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px 16px;margin-bottom:13px}
+#pocket-rivals-feature .launch-all{color:#eee1ff;font-weight:750;text-underline-offset:3px}
+#pocket-rivals-feature .launch-games{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+#pocket-rivals-feature .launch-game{
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);align-items:center;
+  color:var(--launch-text);text-decoration:none;min-width:0;overflow:hidden;
+  border:1px solid #806572;border-radius:13px;background:#2c253d;
+}
+#pocket-rivals-feature .launch-game.voxel-pick{border-color:#8166b1;background:#292040}
+#pocket-rivals-feature .launch-game:hover,
+#pocket-rivals-feature .launch-game:focus-visible{border-color:#f2d5ff;outline:2px solid #ffffff66;outline-offset:2px}
+#pocket-rivals-feature .launch-game img{display:block;width:100%;height:100%;min-height:127px;object-fit:cover}
+#pocket-rivals-feature .launch-copy{padding:11px;min-width:0;display:grid;gap:5px}
+#pocket-rivals-feature .launch-copy small{color:#ffe0a2;font-weight:700;font-size:.79rem}
+#pocket-rivals-feature .voxel-pick small{color:#e4c9ff}
+#pocket-rivals-feature h3{color:var(--launch-text);font-size:clamp(17px,2.2vw,23px);line-height:1.16;margin:0}
+#pocket-rivals-feature p{font-size:.88rem;line-height:1.4;color:var(--launch-sub);margin:0}
+#pocket-rivals-feature .launch-cta{color:#ffe0a2;font-weight:750;font-size:.86rem}
+#pocket-rivals-feature .voxel-pick .launch-cta{color:#e4c9ff}
+@media (max-width:720px){
+  #pocket-rivals-feature .launch-game{grid-template-columns:1fr}
+  #pocket-rivals-feature .launch-game img{height:90px;min-height:0}
+}
+@media (max-width:390px){
+  #pocket-rivals-feature .launch-games{gap:7px}
+  #pocket-rivals-feature .launch-copy{padding:7px}
+  #pocket-rivals-feature p{font-size:.81rem}
+}
