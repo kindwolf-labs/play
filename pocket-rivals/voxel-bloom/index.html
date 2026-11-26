@@ -83,6 +83,10 @@ h1,h2,h3,p{margin:0}
 .metric strong{font-size:1.35rem;color:var(--accent);line-height:1.1}
 .metric strong i{font-size:.77rem;color:var(--muted);font-style:normal;font-weight:600}
 .feedback{min-height:1.4em;font-size:.88rem;color:var(--accent);margin-top:10px}
+.game-guide,.game-footer{max-width:68ch;margin:22px 0 0;color:var(--muted);font-size:.91rem;line-height:1.55}
+.game-guide{padding-top:13px;border-top:1px solid var(--line)}
+.game-guide h2{font-size:1.05rem;color:var(--text);margin-bottom:.3em}
+.game-guide a,.game-footer a{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
 .room{border:1px solid color-mix(in srgb,var(--accent),#17182c 72%);border-radius:22px;min-height:474px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:19px 16px;gap:17px;overflow:hidden;position:relative}
 .highlight{animation:ping 1s alternate infinite;outline:3px solid #fff69b!important;outline-offset:2px;z-index:2}
 @keyframes ping{to{outline-color:#fff;filter:brightness(1.13)}}
@@ -283,6 +287,7 @@ let muted = store.read('muted',false);
 let audio;
 let session;
 let focusKey;
+let siteInfo;
 const L = (zh,en) => language === 'en' ? en : zh;
 const T = words => L(...words);
 const tone = (n = 0) => {
@@ -327,6 +332,13 @@ function renderShell() {
   const item = titles.find(game=>game.id===document.body.dataset.game);
   const languageQuery = L('?lang=zh','?lang=en');
   const portal = !item && document.body.hasAttribute('data-portal');
+  const playQuery = languageQuery + (portal?'&amp;utm_source=kindwolf-hub':'');
+  const prefix = item ? '../../' : '../';
+  const privacy = (portal||siteInfo)
+    ? `<footer class="game-footer"><a href="${prefix}${L('lab','en')}/privacy.html">${L('隐私与统计设置','Privacy and analytics choices')}</a></footer>` : '';
+  const contextualGuide = siteInfo?.querySelector(L('[lang=zh-CN]','[lang=en]'))?.cloneNode(true);
+  if (contextualGuide) contextualGuide.hidden=false;
+  const guide = contextualGuide?.outerHTML || '';
   document.title = item ? `${L(item.zh,item.en)} · Pocket Rivals` : 'Pocket Rivals · 口袋游乐场';
   document.body.className = item ? 'game-page '+item.theme : 'gallery';
   const brand = '<i>✦</i><span>POCKET RIVALS</span>';
@@ -341,16 +353,16 @@ function renderShell() {
     document.body.innerHTML = header+`<main class="lobby">
       <section class="hero"><div class="hero-copy"><h1>${L('口袋游乐场','Five ways<br> to play.')}</h1>
       <p>${L('摸黑查案、引爆晶簇，或让最后一辆车准点出发。五款游戏，选一款开局。','Crack a fogbound case, burst a voxel tower, or send the last ferry home. Pick a game and jump in.')}</p>
-      <div class="hero-actions"><a class="primary" href="./echo-beacon/index.html${languageQuery}">${L('试玩雾港回声','Play Echo Beacon')}</a><a class="quiet" href="./voxel-bloom/index.html${languageQuery}">${L('试玩晶簇爆破','Play Voxel Bloom')}</a></div></div><img src="pocket-rivals.webp" alt="${L('灯塔、晶体和接驳车组成的玩具岛','Toy island with a lighthouse, crystals and shuttle buses')}"></section>
+      <div class="hero-actions"><a class="primary" href="./echo-beacon/index.html${playQuery}">${L('试玩雾港回声','Play Echo Beacon')}</a><a class="quiet" href="./voxel-bloom/index.html${playQuery}">${L('试玩晶簇爆破','Play Voxel Bloom')}</a></div></div><img src="pocket-rivals.webp" alt="${L('灯塔、晶体和接驳车组成的玩具岛','Toy island with a lighthouse, crystals and shuttle buses')}"></section>
       <h2>${L('选一款开始','Pick a game')}</h2><div class="library">
-        ${titles.map(game=>`<a class="game-card ${game.theme}" href="./${game.id}/index.html${languageQuery}"><span class="thumb ${game.theme}"><img src="previews/${game.id}.webp" alt="" width="460" height="235"></span><div><small>${T(game.tag)}</small><h3>${L(game.zh,game.en)}</h3><p>${T(game.desc)}</p><div class="card-play">${L('开始游戏','Play')}</div></div></a>`).join('')}
-      </div></main>`;
+        ${titles.map(game=>`<a class="game-card ${game.theme}" href="./${game.id}/index.html${playQuery}"><span class="thumb ${game.theme}"><img src="previews/${game.id}.webp" alt="" width="460" height="235"></span><div><small>${T(game.tag)}</small><h3>${L(game.zh,game.en)}</h3><p>${T(game.desc)}</p><div class="card-play">${L('开始游戏','Play')}</div></div></a>`).join('')}
+      </div>${privacy}</main>`;
     return;
   }
   if (!session) startGame(item);
   document.body.innerHTML = header+`<main class="cabinet"><header class="game-title"><div><p class="eyebrow">${T(item.tag)}</p><h1>${L(item.zh,item.en)}</h1></div>
   <div class="title-buttons">${act(L('关卡','Levels'),'levels','quiet')}${act(L('重开','Restart'),'restart','quiet')}</div></header>
-  <section class="play-layout"><div class="mobile-instruction">${T(session.engine.instructions)}</div><div id="stage"></div><aside id="panel"></aside></section><div id="overlay"></div></main>`;
+  <section class="play-layout"><div class="mobile-instruction">${T(session.engine.instructions)}</div><div id="stage"></div><aside id="panel"></aside></section>${guide}${privacy}<div id="overlay"></div></main>`;
   renderPlay();
 }
 
@@ -370,6 +382,8 @@ function active(name, fn, feedback=0) {
   }
   run.history.push({state:before,moves:run.moves});
   run.moves++;
+  const first = !run.started;
+  run.started=true;
   run.hint=false;
   const status=run.engine.result?.(run.state) || 'playing';
   if (status === 'won') {
@@ -382,6 +396,8 @@ function active(name, fn, feedback=0) {
   if (status === 'lost') { run.status=status; run.view='result'; }
   tone(status==='won'?2:feedback);
   renderPlay();
+  if (siteInfo && first) window.dispatchEvent(new CustomEvent('prototype-event',{detail:{game:run.item.id,event:'level_start'}}));
+  if (siteInfo && status==='won') window.dispatchEvent(new CustomEvent('prototype-event',{detail:{game:run.item.id,event:'level_complete'}}));
 }
 function note(zh,en) { session.note=[zh,en]; }
 function renderPlay() {
@@ -391,7 +407,7 @@ function renderPlay() {
   const focused = document.activeElement?.dataset.action || focusKey;
   focusKey = '';
   qs('#stage').innerHTML=engine.board(state,run);
-  qs('#panel').innerHTML=`<div class="panel-top"><div class="level">${L('关卡','LEVEL')} <b>${String(run.current).padStart(3,'0')}</b> <span>/ ${campaignLength}</span></div>
+  qs('#panel').innerHTML=`<div class="panel-top"><div id="level" class="level">${L('关卡','LEVEL')} <b>${String(run.current).padStart(3,'0')}</b> <span>/ ${campaignLength}</span></div>
       <span class="move-count">${run.moves} ${L('步','moves')}</span></div>
     <div class="instruction">${T(engine.instructions)}</div>
     <div class="game-panel">${engine.panel?.(state,run)||''}</div>
@@ -472,7 +488,10 @@ document.addEventListener('keydown',event=>{
   if (event.key.toLowerCase()==='z') gameAction('undo');
   if (event.key.toLowerCase()==='h') gameAction('hint');
 });
-document.addEventListener('DOMContentLoaded',renderShell);
+document.addEventListener('DOMContentLoaded',()=>{
+  siteInfo=document.querySelector('#game-guides');
+  renderShell();
+});
 
 const faces = [
   {delta:[1,0,0], verts:[[1,0,0],[1,1,0],[1,1,1],[1,0,1]], shade:-22},
@@ -687,8 +706,13 @@ engines['voxel-bloom'] = {
 };
 
 </script>
+<script defer src="../../analytics.js?v=pocket-rivals-1" data-release="pocket-rivals-1"></script>
 </head>
 <body data-game="voxel-bloom">
+<div id="game-guides">
+  <section class="game-guide" lang="en"><h2>How to play Voxel Bloom</h2><p>Drag the 3D crystal to find an exposed face. Select its matching charge, then tap to blast the connected cluster. Blocks above the gap fall, so check for bigger chains after each shot.</p><a href="../">Browse more free puzzles</a></section>
+  <section class="game-guide" lang="zh-CN" hidden><h2>晶簇爆破怎么玩</h2><p>拖动晶体寻找露出的表面。选中对应颜色并点按方块，可以清掉相连的同色晶簇。上方的方块会下沉，每次爆破后都可以找新的连锁。</p><a href="../?lang=zh">查看更多免费游戏</a></section>
+</div>
 <noscript>Please enable JavaScript to play. 请启用 JavaScript 后再试玩。</noscript>
 </body>
 </html>

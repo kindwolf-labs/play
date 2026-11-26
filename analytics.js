@@ -11,17 +11,22 @@
   if (location.hostname !== 'kindwolf-labs.github.io' || location.protocol !== 'https:' || window.top !== window.self ||
       !path.startsWith('/play/') || disabled || (!validation && (navigator.webdriver || qaKeys.some(k => query.has(k)) || query.get('utm_source') === 'qa')) ||
       navigator.doNotTrack === '1' || window.doNotTrack === '1') return;
-  const stateEventGames = ['tiny-orchard', 'marble-relay', 'balance-pantry'];
+  const pocketRivals = ['echo-beacon', 'voxel-bloom', 'parcel-parade', 'ferry-queue', 'switchpost'];
+  const stateEventGames = ['tiny-orchard', 'marble-relay', 'balance-pantry', ...pocketRivals];
   const games = ['pocket-blocks', 'arrow-harbor', 'copper-workshop', 'lantern-links', 'garden-current', 'orbit-switch', 'pocket-depot', 'parcel-platform', 'paper-fold-atlas', 'prism-post', 'rail-junction', 'magnet-foundry', 'tile-expedition', 'bridgewright', ...stateEventGames];
   const match = path.match(/^\/play\/(?:en\/)?lab\/([^/]+)\/(?:index\.html)?$/);
   const primary = path.match(/^\/play\/(bloom-rings|football-draft|gridiron-draft)\/(?:index\.html)?$/);
-  const game = primary?.[1] || (match && games.includes(match[1]) ? match[1] : null);
+  const pocketRoute = path.match(/^\/play\/pocket-rivals\/([^/]+)\/(?:index\.html)?$/);
+  const pocketGame = pocketRivals.includes(pocketRoute?.[1]);
+  const game = primary?.[1] || (pocketGame ? pocketRoute[1] : match && games.includes(match[1]) ? match[1] : null);
   const requiresGameEvent = stateEventGames.includes(game);
-  const collection = /^\/play\/(?:en\/|lab\/)?(?:index\.html)?$/.test(path);
+  const pocketHub = /^\/play\/pocket-rivals\/(?:index\.html)?$/.test(path);
+  const collection = pocketHub || /^\/play\/(?:en\/|lab\/)?(?:index\.html)?$/.test(path);
   if (!game && !collection) return;
   const website = '97fedd6b-a37f-4cf7-8a80-9919c0eae4a1';
   const tag = validation ? 'integration-test' : 'production';
-  const sources = ['poki', 'playgama', 'itch', 'youtube', 'tiktok', 'reddit', 'discord', 'taptap', 'crazygames'];
+  const sources = ['poki', 'playgama', 'itch', 'youtube', 'tiktok', 'reddit', 'discord', 'taptap', 'crazygames',
+    'kindwolf-home', 'kindwolf-lab', 'kindwolf-related', 'kindwolf-hub'];
   const candidate = query.get('utm_source');
   const source = sources.includes(candidate) ? candidate : 'direct';
   let referrer = '';
@@ -29,7 +34,8 @@
   let ready = false;
   const queue = [];
   function send(name, data = {}) {
-    const payload = { website, hostname: location.hostname, url: path, title: game || 'Kindwolf Play', language: navigator.language,
+    const payload = { website, hostname: location.hostname, url: pocketGame ? path.replace(/index\.html$/,'') : path,
+      title: game || (pocketHub ? 'Pocket Rivals' : 'Kindwolf Play'), language: navigator.language,
       screen: `${screen.width}x${screen.height}`, referrer, tag };
     if (name) payload.name = validation ? 'test_' + name : name;
     if (Object.keys(data).length) payload.data = data;
@@ -49,6 +55,7 @@
   sdk.onerror = () => { queue.length = 0; };
   document.head.appendChild(sdk);
   if (validation) send('validation_ping', { scope: 'integration-test' }); else send(null);
+  if (pocketGame) send('pocket_rivals_entry', {game,version,source});
   if (!game) return;
   const selectors = {
     'bloom-rings': '#board,#turnLeft,#turnRight,#btnHint',
@@ -69,7 +76,7 @@
   };
   let started = false, completed = false, seasonDone = false, currentLevel = -1;
   let active = 0, lastFlush = 0, previousTick = performance.now(), lastInput = -Infinity;
-  const base = () => ({ game, version, level: getLevel() });
+  const base = () => ({ game, version, level: getLevel(), ...(pocketGame ? {source} : {}) });
   function begin() {
     const level = getLevel();
     if (!started) { started = true; send('game_start', { ...base(), source }); }
@@ -88,7 +95,8 @@
   function input(event) {
     if (!event.isTrusted) return;
     lastInput = performance.now();
-    if (event.type === 'pointerdown' && event.target instanceof Element && event.target.closest('#restart,#reset,#btnRestart,#again,#replay')) { currentLevel = -1; completed = false; }
+    const reset = event.target instanceof Element && event.target.closest(pocketGame ? '[data-action="restart"]' : '#restart,#reset,#btnRestart,#again,#replay');
+    if (reset && (event.type === 'pointerdown' || (pocketGame && event.type === 'click'))) { currentLevel = -1; completed = false; }
     if (requiresGameEvent) return;
     if ((event.type === 'pointerdown' || event.type === 'click') && event.target instanceof Element && event.target.closest(actionSelector)) begin();
     if (event.type === 'keydown' && ['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','w','a','s','d','W','A','S','D','Enter',' '].includes(event.key)) {
